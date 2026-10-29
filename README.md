@@ -13,7 +13,9 @@ Bài tập lớn môn **Lập Trình Mạng**, giảng viên **Hồ Đắc Phư�
 
 Sinh viên viết bot trong một tệp `main.py`, đặt ở gốc repo GitHub công khai rồi thi đấu qua website. Máy quản lý nhận bài, ghép trận và ghi Elo; các máy chấm chạy bot trong Isolate, gửi kết quả về. Sinh viên có thể tải HTML đấu thử về máy để kiểm thuật toán và dùng HTML replay để xem lại trận.
 
-**Website:** [ottv2-nhom12.koreacentral.cloudapp.azure.com](https://ottv2-nhom12.koreacentral.cloudapp.azure.com).
+Kho mã nguồn và bộ tài liệu đi kèm hướng dẫn người tổ chức **tự cài đặt, triển khai và vận hành một hệ thống giải đấu riêng**: chuẩn bị môi trường, dựng website, kết nối máy chấm và thiết lập các dịch vụ Google. Người triển khai có thể chọn VPS Ubuntu và các máy chấm phù hợp với điều kiện của mình. Tên miền, tên máy và tài nguyên Google của nhóm là cấu hình tham khảo; khi dựng một hệ thống độc lập, cần thiết lập địa chỉ, tài khoản và khóa riêng cho hệ thống đó.
+
+**Bản triển khai của nhóm:** [ottv2-nhom12.koreacentral.cloudapp.azure.com](https://ottv2-nhom12.koreacentral.cloudapp.azure.com). Cách tự triển khai bắt đầu từ [mục lục tài liệu](docs/README.md).
 
 **Đọc trước:** [Hướng dẫn sinh viên](docs/QUY_DINH_SINH_VIEN.md) · [Luật và cách viết main.py](docs/VIET_BOT.md) · [Mục lục toàn bộ tài liệu](docs/README.md).
 
@@ -22,6 +24,10 @@ Sinh viên viết bot trong một tệp `main.py`, đặt ở gốc repo GitHub 
 Tôi xây dựng OTTv2 để tổ chức giải đấu bot cho sinh viên: người chơi có thể tự đăng ký, cập nhật bài, tìm đối thủ và xem kết quả; người quản lý có thể điều hành giải, đổi bản đồ, quản lý tài khoản và theo dõi máy chấm. Bài toán của tôi là vận hành được các công việc đó với ngân sách phù hợp, tận dụng máy tính sẵn có và giảm thao tác thủ công khi số người tham gia tăng.
 
 Tôi chia hệ thống theo tính chất công việc: VPS giữ dữ liệu và điều phối; các máy chấm xử lý bot; Google phục vụ biểu mẫu, bảng điểm và tài liệu; máy sinh viên xử lý đấu thử và replay. Cách chia này giúp dùng tài nguyên đúng chỗ, bổ sung sức chấm khi cần và kiểm soát chi phí thuê máy chủ.
+
+### Chi phí triển khai web hiện tại
+
+**Chi phí hạ tầng web mà nhóm đang tự chi trả: 0đ**, nhờ sử dụng quyền lợi **Azure for Students**. Chi phí sử dụng tài nguyên Azure hiện được bù bằng tín dụng của gói sinh viên. Mức 0đ này áp dụng trong phạm vi ưu đãi còn hiệu lực và đủ tín dụng; người tự triển khai cần dự toán theo gói và hạ tầng mình chọn. Thông tin chương trình: [Azure for Students](https://learn.microsoft.com/azure/education-hub/about-azure-for-students).
 
 ### Tôi tối ưu chi phí và vận hành như thế nào?
 
@@ -33,6 +39,8 @@ Tôi chia hệ thống theo tính chất công việc: VPS giữ dữ liệu và
 | Kiểm trạng thái mỗi phút, dừng hỏi khi tab ẩn, chỉ cập nhật phần giao diện đổi và tải log khi cần | Giảm yêu cầu lặp, dữ liệu truyền và hiện tượng nháy giao diện | [Giảm số lần hỏi trạng thái](docs/TOI_UU.md#2-giảm-số-lần-hỏi-trạng-thái) |
 | Khi cập nhật bot, lấy commit mới nhất rồi chốt phiên bản; cache nội dung tải có giới hạn | Dùng đúng bài đã nhận, giảm tải lặp từ GitHub và kiểm soát RAM cache | [Tải bot và cache](docs/TOI_UU.md#4-tải-bot-github-theo-commit-và-dùng-cache-có-giới-hạn) |
 | Giới hạn tài nguyên bot, lưu kết quả chưa gửi và chống ghi Elo trùng | Kiểm soát việc chiếm tài nguyên, phục hồi khi mất mạng và giảm công xử lý sự cố | [Luật và tài nguyên](docs/VIET_BOT.md) · [Giữ kết quả](docs/TOI_UU.md#6-tránh-mất-kết-quả-và-tính-điểm-trùng) |
+| Đưa cập nhật bot vào hàng đợi, chỉ giữ một yêu cầu đang xử lý cho mỗi sinh viên | Trang trả trạng thái sớm, hạn chế gửi trùng và tách việc tải/kiểm bot khỏi yêu cầu HTTP | [Công việc nền](docs/TOI_UU.md#9-xử-lý-cập-nhật-bot-ở-nền-và-hạn-chế-việc-trùng) |
+| Dọn log hết hạn theo lô, giữ điểm và tóm tắt trận | Kiểm soát dung lượng lưu trữ và khối lượng kiểm dọn mỗi lượt | [Quản lý log](docs/TOI_UU.md#10-kiểm-soát-dung-lượng-log-bằng-các-lượt-dọn-nhỏ) |
 
 Tôi kiểm các lựa chọn bằng số đo: API nội bộ hoàn thành 6.500/6.500 yêu cầu qua ba mức tải; ở mức 200 yêu cầu/giây, P95 là 3,361 ms. VPS chấm 8 trận bot mẫu sâu 3 với 4 trận song song trong 16,960 giây. Các mẫu này có điều kiện đo riêng, chưa chứng minh 4.000 sinh viên thi đấu đồng thời. **Số liệu, dữ liệu JSON và giới hạn phép đo:** [HIEU_NANG.md](docs/HIEU_NANG.md). **Toàn bộ tối ưu, cách thực hiện và đánh đổi:** [TOI_UU.md](docs/TOI_UU.md).
 

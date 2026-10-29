@@ -1,6 +1,6 @@
 # Đọc tài liệu OTTv2 từ đâu?
 
-Chọn đúng công việc trong bảng. Không cần đọc hết thư mục này theo thứ tự tên tệp.
+Bộ tài liệu hướng dẫn dựng và vận hành một bản cài OTTv2 từ mã nguồn, từ chạy local đến website HTTPS và nhiều máy chấm. Người tổ chức lựa chọn VPS, máy chấm và tài khoản dịch vụ của mình; địa chỉ và cấu hình của nhóm trong các ví dụ giúp đối chiếu cách thiết lập. Chọn công việc trong bảng để bắt đầu.
 
 | Bạn cần làm gì? | Đọc tài liệu nào? |
 | --- | --- |

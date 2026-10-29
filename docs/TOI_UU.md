@@ -2,6 +2,10 @@
 
 Tài liệu giải thích **đã làm gì, giảm tải ở đâu và còn giới hạn nào**. Thông số đo và cách kiểm nằm trong [KIEM_THU.md](KIEM_THU.md); đây không phải lời hứa về số người dùng khi chưa đo.
 
+### Chi phí của bản triển khai hiện tại
+
+Nhóm đang tự chi trả **0đ cho hạ tầng web Azure**, sử dụng tín dụng từ quyền lợi [Azure for Students](https://learn.microsoft.com/azure/education-hub/about-azure-for-students). Đây là chi phí trong điều kiện ưu đãi hiện tại; tài nguyên Azure vẫn tiêu thụ tín dụng theo mức sử dụng. Các PC chấm là thiết bị sẵn có; con số trên chưa tính điện, mạng và khấu hao thiết bị. Khi tự triển khai, người tổ chức chọn hạ tầng và theo dõi ngân sách của mình. Các cơ chế dưới đây giúp tiết kiệm tài nguyên cả khi dùng ưu đãi sinh viên lẫn khi thuê máy theo giá thông thường.
+
 ## 1. Chuyển việc đọc và xem lại ra ngoài VPS
 
 | Phần việc | Cách xử lý hiện tại | Tác dụng |
@@ -79,3 +83,19 @@ Số đo hiện hành tập trung tại [HIEU_NANG.md](HIEU_NANG.md), có [JSON 
 Quản trị lưu bản đồ và ba mã bot đấu thử trong cùng giao dịch; lỗi một phần thì không thay gì. Nút Sao chép chỉ có ở màn hình đăng nhập và trang Thi đấu của sinh viên; nút xuất một gói công khai, giúp sinh viên lấy đúng bản đồ và đối thủ hiện tại. Cú pháp mã được kiểm bằng AST, không chạy trên VPS khi lưu. Bộ đấu thử dùng thời gian thực vì trình duyệt không đo được CPU/áp RAM như Isolate; xem [DAU_THU.md](DAU_THU.md).
 
 Một tài khoản chỉ có một phiên 30 phút, giúp tránh hai nơi cùng thao tác một bot. Hết phiên sinh viên chờ 7 phút, đăng xuất sớm và admin không có khoảng chờ. Việc kiểm phiên/tài khoản khóa diễn ra trên máy chủ, không chỉ ẩn nút trong giao diện.
+
+## 9. Xử lý cập nhật bot ở nền và hạn chế việc trùng
+
+Khi sinh viên bấm Cập nhật bot, API ghi yêu cầu vào SQLite và trả trạng thái đang chờ. Vòng xử lý nền mới tải GitHub và kiểm bot; một yêu cầu HTTP không phải giữ kết nối suốt công việc đó. Mỗi tài khoản chỉ có một yêu cầu ở trạng thái chờ/đang xử lý, được ràng buộc cả trong cơ sở dữ liệu. Khoảng cách 3 phút giữa hai yêu cầu được nhận giúp hạn chế gửi liên tục.
+
+Nếu GitHub báo giới hạn tốc độ, yêu cầu được giữ lại cùng thời điểm thử tiếp; các yêu cầu chưa tới thời điểm được bỏ qua khi chọn việc. Việc này giảm thử lại vô ích. Tải hoặc kiểm bot lỗi thì giữ phiên bản hợp lệ đang dùng. Hàng đợi vẫn có thể dài khi nhiều sinh viên cập nhật cùng lúc; đây là cách điều tiết và giữ trạng thái, không làm mất thời gian tải/kiểm thực tế.
+
+Đối chiếu mã: [request_update/process_update](../ottv2/portal_data.py), [vòng xử lý nền](../ottv2/local_arena.py), [ràng buộc một yêu cầu](../ottv2/accounts.py), [hạn cập nhật](../ottv2/update_gate.py).
+
+## 10. Kiểm soát dung lượng log bằng các lượt dọn nhỏ
+
+Log chi tiết được giữ 7 ngày; điểm và tóm tắt trận tiếp tục được lưu. Khoảng 60 giây một lần, máy quản lý kiểm tối đa 100 bản ghi đủ điều kiện, giúp giới hạn số mục cần xử lý trong một lượt. Cách này tránh để một lần kiểm dọn phải duyệt toàn bộ lịch sử khi giải kéo dài.
+
+Chỉ bản ghi hoàn tất, có biên nhận bền vững và đúng mã băm mới được dọn khi hết hạn. Tệp phục hồi của trận chưa xong và tệp nghi vấn được giữ lại để xử lý. Sinh viên cần tự lưu JSON nếu muốn giữ replay lâu hơn. Các mốc 7 ngày/60 giây/100 bản ghi là chính sách dung lượng và khối lượng mỗi lượt; chưa có phép đo riêng để khẳng định chúng giảm bao nhiêu phần trăm tài nguyên.
+
+Đối chiếu mã: [log_retention.py](../ottv2/log_retention.py); cách vận hành ở [VAN_HANH.md](VAN_HANH.md).
