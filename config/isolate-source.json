@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/ioi/isolate.git",
+  "version": "2.7",
+  "tag": "v2.7",
+  "commit": "8f185bb37f3f23e29b33b0c7727c91c13429abe3",
+  "platform": "Ubuntu 24.04, systemd, cgroup v2",
+  "documentation": "https://github.com/ioi/isolate/blob/v2.7/isolate.1.txt"
+}

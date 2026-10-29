@@ -1,0 +1,23 @@
+[Unit]
+Description=OTTv2 host with up to 12 isolated match slots
+Requires=isolate.service
+After=network-online.target isolate.service
+Wants=network-online.target
+Conflicts=ottv2-worker.service
+
+[Service]
+Type=simple
+User=ottv2
+Group=ottv2
+WorkingDirectory=/opt/ottv2/app
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/usr/bin/python3 -m ottv2.worker_pool run --config /etc/ottv2-worker-pool.json --directory /var/lib/ottv2/worker-pool
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=330
+KillSignal=SIGINT
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

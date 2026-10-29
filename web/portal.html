@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OTTv2 · Đấu bot</title><style>
+:root{color-scheme:light;--ink:#193450;--muted:#65748a;--blue:#225ce4;--line:#d9e2eb;--button-line:#9fbbea;--paper:#fff;--red:#be4351;--sidebar:224px}
+*{box-sizing:border-box}
+body{margin:0;background:#f7f6f0;background-image:radial-gradient(#203c6410 .8px,transparent .8px);background-size:18px 18px;color:var(--ink);font:14px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--blue);text-underline-offset:4px}button,input,textarea,select{font:inherit}
+button,a.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:43px;border:1px solid var(--button-line);border-radius:11px;padding:10px 16px;background:white;color:var(--ink);font-weight:650;text-decoration:none;cursor:pointer;box-shadow:0 2px 0 #e4ebf7;transition:background .15s,transform .15s,box-shadow .15s}
+button:hover,a.button:hover{background:#edf3ff;border-color:#638edd;transform:translateY(-1px);box-shadow:0 3px 0 #d9e4f6}
+button:active,a.button:active{transform:translateY(1px);box-shadow:none}
+button.primary,a.button.primary{background:var(--blue);border-color:#1746aa;color:#fff;box-shadow:0 3px 0 #173e96}
+button.primary:hover,a.button.primary:hover{background:#184dcc}
+button:disabled,button:disabled:hover{background:#f2f4f7;border-color:#d6dfe9;color:#8794a4;cursor:not-allowed;box-shadow:none;transform:none}
+input,textarea,select{width:100%;border:1px solid #b8c9dd;border-radius:10px;min-height:45px;padding:11px 13px;background:#fff;color:var(--ink)}
+input:hover,textarea:hover,select:hover{border-color:#7099d2}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #8db5ff;outline-offset:3px}
+label{display:block;margin:16px 0 7px;font-size:13px;font-weight:650}textarea{min-height:120px;resize:vertical}
+h1,h2,h3,p{margin:0}h1{font-size:29px;line-height:1.25;letter-spacing:-.035em}h2{font-size:18px;line-height:1.4;letter-spacing:-.02em}h3{font-size:15px}p+p{margin-top:10px}ol,ul{padding:0;margin:0;list-style:none}[hidden]{display:none!important}
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);background:#fff;border-right:1px solid var(--line);z-index:30;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:11px;height:84px;padding:18px 22px;color:#103d77;text-decoration:none;font-size:24px;font-weight:850;letter-spacing:-.04em;border-bottom:1px solid var(--line)}
+.brand-logo{display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden;width:45px;height:45px;border-radius:50%;background:#fff}.brand-logo img{width:68px;height:49px;max-width:none}
+.brand small{display:block;font-size:10px;line-height:1.6;font-weight:600;letter-spacing:.06em;color:var(--muted)}
+.nav{display:flex;flex-direction:column;gap:8px;padding:28px 15px}.nav a{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid transparent;border-radius:12px;color:#5b6e87;text-decoration:none;font-size:13px;font-weight:650;white-space:nowrap}
+.nav a:before{content:"◇";display:grid;place-items:center;font-size:22px;line-height:1;width:23px;flex:none;color:#4773c5}
+.nav a[href="/arena"]:before{content:"▦"}.nav a[href="/standings"]:before{content:"☆"}.nav a[href="/bot"]:before{content:"⌘"}.nav a[href="/results"]:before{content:"▤"}.nav a[href="/guide"]:before{content:"▣"}.nav a[href="/account"]:before{content:"◉"}.nav a[href="/students"]:before{content:"♙"}.nav a[href="/system"]:before{content:"▥"}
+.nav a:hover{background:#f2f6ff;color:#2057c4}.nav a.active{background:#eaf1ff;border-color:#ccdcfa;color:#174ebd;box-shadow:0 2px 0 #e1eaff}
+.sidebar-footer{margin-top:auto;padding:22px;font-size:11px;color:#60718a;line-height:1.7;border-top:1px solid #edf0f5}.sidebar-footer:before{content:"UET · VNU";display:block;color:#24466d;letter-spacing:.12em;font-size:10px;font-weight:800;margin-bottom:4px}
+.topbar{position:fixed;top:0;left:var(--sidebar);right:0;min-height:84px;padding:16px 32px;display:flex;justify-content:space-between;align-items:center;gap:18px;background:#ffffffed;backdrop-filter:blur(12px);border-bottom:1px solid var(--line);z-index:20}
+#page-heading{font-size:15px;font-weight:750;color:#294967}#session-actions{justify-content:flex-end;gap:10px}#who{font-size:12px;font-weight:650}#session-actions button{font-size:12px;padding:7px 12px;min-height:35px}
+.main-content{max-width:1660px;margin-left:var(--sidebar);padding:116px 32px 36px}
+.card{background:#fff;border:1px solid #cfdbe8;border-radius:20px;padding:26px;box-shadow:0 4px 0 #e5eaf0;margin-bottom:24px}
+.card h1,.card h2{margin-bottom:14px}.muted{color:var(--muted);font-size:13px}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.spaced{margin-top:18px}.wide{width:100%}
+.status{color:#244f8e;margin-bottom:20px;padding:13px 16px;background:#eaf2ff;border:1px solid #b8cfee;border-radius:12px}.status:empty{display:none}.status.error{background:#fff0f0;border-color:#ebc2c8;color:var(--red)}
+.notice{padding:14px 18px;margin-bottom:22px;border:1px solid #e7cc87;border-radius:12px;background:#fff4d5;color:#74551b;font-size:13px}.badge{font-size:12px;padding:5px 11px;border:1px solid #cfddf2;border-radius:8px;background:#eef4ff;color:#315d9e;white-space:nowrap}.a{color:#b3424c;background:#fff0ee;border-color:#f0d4d5}.b{color:#235ea7;background:#edf5ff;border-color:#cde0f5}
+.arena-layout,.landing{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:26px;align-items:start}
+.board-card{position:relative;padding:25px 26px 16px;margin-bottom:0;overflow:hidden;background:#fff}.board-caption{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:18px;border-bottom:1px solid #e5ebf2}.board-caption h1,.board-caption h2{margin:0;font-size:25px;letter-spacing:-.035em}.eyebrow{font-size:10px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;color:#627c9c;margin-bottom:5px}
+.board-emblem{display:grid;place-items:center;flex:none;width:45px;height:45px;background:#fff2c7;border:1px solid #e7d188;border-radius:13px;font-size:24px;transform:rotate(5deg)}
+.board{display:block;width:100%;max-width:570px;height:auto;max-height:calc(100dvh - 266px);margin:0 auto;object-fit:contain}
+.board-footer{display:flex;justify-content:center;align-items:center;gap:15px;font-size:11px;color:#66809c;margin:7px 0 4px}.board-footer span{display:flex;align-items:center;gap:6px}.board-footer i{width:7px;height:7px;border-radius:50%;background:#d35d58}.board-footer span:last-child i{background:#3577bd}
+.arena-controls{padding:25px}.arena-controls h1{font-size:25px}.arena-controls #request-state{font-size:13px;color:#60758e}.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}.stat{padding:17px 12px;background:#edf4ff;border:1px solid #cadcf7;border-radius:14px}.stat:nth-child(2){background:#fff5db;border-color:#ecdbac}.stat strong{display:block;font-size:25px;line-height:1.6;letter-spacing:-.04em;color:#1f58c6}.stat:nth-child(2) strong{color:#94701c}.stat .muted{font-size:11px;color:#596e8a}.arena-controls .row button{flex:1}.arena-controls .quick-links{border-top:1px solid var(--line);padding-top:18px;margin-top:22px;font-size:12px}.arena-controls .quick-links a{text-decoration:none;font-weight:650}.arena-controls #wait-hint{font-size:12px;line-height:1.75}
+.help-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 22px}.help-actions .button{min-height:36px;padding:7px 11px;font-size:12px;box-shadow:none;background:#f7faff}.rules-summary{font-size:11px;color:#60758e;padding:10px 12px;background:#f4f7fc;border:1px solid #dce6f3;border-radius:10px;margin:14px 0}.page-width{width:100%;max-width:920px}.resources{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:1020px}.resource{position:relative;display:flex;align-items:center;text-decoration:none;color:var(--ink);min-height:120px;margin:0;padding:24px;transition:transform .15s,box-shadow .15s}.resource strong{font-size:17px;padding-right:28px}.resource:before{content:"↗";position:absolute;right:22px;top:calc(50% - 18px);color:#3b6cc4;font-size:25px}.resource:nth-child(2){background:#f0f5ff}.resource:nth-child(3){background:#fff8e6}.resource:hover{transform:translateY(-3px);border-color:#89a9d9;box-shadow:0 7px 0 #e1e9f3}#guide-page>h1{margin-bottom:24px}
+.login{position:relative;margin:0;padding:27px;border:1px solid #b5c8e2;box-shadow:0 5px 0 #dbe5f2}
+.login h1{font-size:26px;margin-bottom:7px}.login form button{width:100%;margin-top:24px;min-height:47px}.login-links{border-top:1px solid var(--line);padding-top:22px;margin-top:25px;display:grid;gap:14px;font-size:12px}.login-links a:not(.button){text-decoration:none}.login .muted{font-size:11px}.login-links .button{background:#f8faff}
+.match{border-top:1px solid var(--line);padding:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px}.match:first-child{border:0}.match .teams{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-weight:650;margin-bottom:8px}.match .meta{font-size:12px;color:var(--muted);margin-top:7px}.match button{font-size:12px;white-space:nowrap}
+details{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}summary{cursor:pointer;font-weight:650;color:#335a88}code{font-size:12px;overflow-wrap:anywhere}#manual-text{font:12px/1.5 ui-monospace,monospace;min-height:160px}#admin-panel{max-width:1100px}#admin-panel>h1{margin-bottom:10px}#admin-overview{margin-bottom:24px;line-height:1.9}#admin-controls{max-width:920px}#admin-board{max-width:460px;max-height:480px;margin:20px auto}#admin-failures ul{font-size:13px}#admin-failures li{padding:12px 0;border-bottom:1px solid #e9eef5}
+@media(min-width:1500px){.arena-layout,.landing{grid-template-columns:minmax(0,1fr) 360px;gap:30px}.main-content{padding-left:42px;padding-right:42px}.login{padding:30px}.board{max-width:610px}}
+@media(max-width:1100px){:root{--sidebar:190px}.brand{padding-left:16px;font-size:22px}.nav{padding:24px 10px}.nav a{padding:11px 9px;gap:8px}.topbar{padding-left:24px;padding-right:24px}.main-content{padding-left:24px;padding-right:24px}.arena-layout,.landing{grid-template-columns:minmax(0,1fr) 300px;gap:20px}.card{padding:22px}.board-card{padding:22px 14px 14px}.board-caption h1,.board-caption h2{font-size:23px}.board{max-height:calc(100dvh - 262px)}}
+@media(max-width:900px) and (min-width:781px){.arena-layout,.landing{grid-template-columns:1fr}.login{max-width:none}.login form{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.login form label:first-child{grid-column:1}.login form #identity{grid-column:1;grid-row:2}.login form label[for="password"]{grid-column:2;grid-row:1}.login form #password{grid-column:2;grid-row:2}.login form button{grid-column:1/-1}.board{max-height:none;max-width:480px}.resources{grid-template-columns:1fr}}
+@media(max-width:780px){.sidebar{position:static;width:100%;border-right:0;border-bottom:1px solid var(--line)}.brand{height:70px;padding:12px 18px;border:0;font-size:23px}.sidebar-footer{display:none}.nav{padding:4px 12px 14px;flex-direction:row;overflow-x:auto;gap:6px;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav a{padding:8px 12px;gap:7px;font-size:12px}.nav a:before{font-size:19px;width:19px}.topbar{position:sticky;left:0;min-height:59px;padding:12px 18px;gap:10px}.main-content{margin-left:0;padding:24px 18px 36px}.arena-layout,.landing{grid-template-columns:1fr;gap:22px}.board{max-height:none;max-width:490px}.arena-controls .stats{margin:20px 0}.arena-layout{padding-bottom:76px}.arena-controls>.row{position:fixed;bottom:0;left:0;right:0;z-index:25;display:flex;padding:12px 18px;background:#fffffff5;backdrop-filter:blur(12px);border-top:1px solid var(--line);box-shadow:0 -4px 16px #203c6d08}.resources{gap:14px}.resource{padding:20px;min-height:105px}.resource strong{font-size:15px}#who{max-width:145px;overflow-wrap:anywhere}#session-actions{gap:8px}#page-heading{font-size:13px}.login{max-width:490px;width:100%;justify-self:center}}
+@media(max-width:480px){.topbar{flex-wrap:wrap}#session-actions{margin-left:auto}#who{display:none}#session-actions button{padding:6px 9px}#own-elo{font-size:11px}.resources{grid-template-columns:1fr}.match{align-items:flex-start;flex-wrap:wrap}.card{padding:21px;border-radius:17px}.board-card{padding:20px 12px 12px}.board-caption{margin-left:8px;margin-right:8px}.board-caption h1,.board-caption h2{font-size:22px}.board-emblem{width:38px;height:38px;font-size:21px}.login{padding:25px}.main-content{padding-left:14px;padding-right:14px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+#active-left,#passive-left{font-size:clamp(18px,1.6vw,24px);white-space:nowrap}
+.nav a.standings-link{white-space:normal;flex-wrap:wrap;row-gap:2px}.nav a.standings-link small{flex-basis:100%;margin-left:35px;font-size:10px;font-weight:400;color:#7586a0}.interval-note{font-size:11px;color:#7586a0;margin:8px 0}
+</style></head><body>
+<aside class="sidebar"><a href="/" class="brand"><span class="brand-logo"><img src="/assets/uet-logo.png" alt="Đại học Công nghệ" width="68" height="49"></span><span>OTTv2<small>Búa · Bao · Kéo</small></span></a>
+<nav id="nav" class="nav" aria-label="Điều hướng chính" hidden></nav>
+<nav id="public-links" class="nav" aria-label="Đăng nhập"><a href="/" class="active">Đăng nhập</a></nav>
+<div class="sidebar-footer">Trường Đại Học Công Nghệ</div></aside>
+<header class="topbar"><div id="page-heading">Thi đấu bot</div><div id="session-actions" class="row" hidden><span id="who" class="muted"></span><span id="own-elo" class="badge"></span><button id="refresh" type="button">Làm mới</button><button id="logout" type="button">Đăng xuất</button></div></header>
+<main class="main-content"><p id="status" class="status" role="status" aria-live="polite"></p><section id="practice-copy-box" class="card" hidden><label for="practice-copy-text">Cấu hình đấu thử: bản đồ và 3 mã bot mẫu</label><textarea id="practice-copy-text" readonly></textarea><p class="muted">Nhấn Ctrl+C, mở HTML đấu thử rồi dán vào nút Dán cấu hình từ website.</p></section>
+<section id="login-panel" class="landing"><section class="card board-card"><div class="board-caption"><div><p class="eyebrow">OTTv2 · Bản đồ thi đấu</p><h1>Bàn cờ hiện tại</h1></div><span class="board-emblem" aria-hidden="true">⚑</span></div><img id="public-board" class="board" src="/board.svg" alt="Bản đồ khởi đầu hiện tại của giải đấu"></section><section class="card login">
+<div class="help-actions"><a class="button" href="https://drive.google.com/file/d/1r4dwmC-EvzwlE1Q-Z2Lzzpv7KNFr78jx/view" target="_blank" rel="noopener noreferrer">Đấu thử với máy</a><a class="button" href="https://drive.google.com/file/d/1lfaBDrBbYPJRhikBKEGlKnfBxuunlYFm/view" target="_blank" rel="noopener noreferrer">Tải replay</a><button id="copy-practice-public" type="button">Sao chép cấu hình đấu thử</button></div><h1>Đăng nhập</h1>
+<form id="login-form"><label for="identity">Tên đăng nhập</label><input id="identity" autocomplete="username" maxlength="64" required>
+<label for="password">Mật khẩu</label><input id="password" type="password" autocomplete="current-password" maxlength="256" required>
+<button class="primary" type="submit">Đăng nhập</button></form>
+<div class="login-links"><a href="https://docs.google.com/forms/d/e/1FAIpQLSfrTYroeTPwg4G3rLUhgFgxQsJCIzZXOOQ7rehJ0r17XPnv2w/viewform" target="_blank" rel="noopener noreferrer" class="button wide">Đăng ký tài khoản</a><a id="password-help" href="https://docs.google.com/forms/d/e/1FAIpQLSfVLutxQFxB0DUbHC7RpAfu8G-Rw3D4GIJf3mZYjYM3fcRbZQ/viewform" target="_blank" rel="noopener noreferrer">Đổi / quên mật khẩu hoặc link GitHub ↗</a><p class="muted">Yêu cầu Form được xử lý khoảng 1 phút/lần.</p></div></section></section>
+
+<section id="workspace" hidden><div id="notice" class="notice" hidden></div>
+<div id="student-panel" hidden>
+<section id="arena-page"><div class="arena-layout"><section class="card board-card"><div class="board-caption"><div><p class="eyebrow">OTTv2 · Bản đồ thi đấu</p><h2>Bàn cờ hiện tại</h2></div><span class="board-emblem" aria-hidden="true">⚑</span></div><img id="current-board" class="board" alt="Vị trí ban đầu của 18 quân, bom, chướng ngại và đích trên bản đồ đang dùng"></section>
+<section class="card arena-controls"><h1>Thi đấu</h1><div class="help-actions"><a class="button" href="https://drive.google.com/file/d/1r4dwmC-EvzwlE1Q-Z2Lzzpv7KNFr78jx/view" target="_blank" rel="noopener noreferrer">Đấu thử với máy</a><button id="copy-practice-arena" type="button">Sao chép cấu hình đấu thử</button><a class="button" href="https://docs.google.com/document/d/1Udnz0-J47yw_roNc5Bdts2EEgn7BT9RuiG7eZvtDLZ0/edit" target="_blank" rel="noopener noreferrer">Luật &amp; cách thi đấu ↗</a></div><p class="rules-summary">7 giây CPU/bot · 25 nước/bên · 2,5 giây/lượt</p><p id="request-state">Đang đọc trạng thái…</p><p class="interval-note">Trạng thái tự cập nhật 1 phút/lần.</p>
+<div class="stats"><div class="stat"><span class="muted" title="Bạn bấm Tìm trận để tìm đối thủ">Số lượt tấn công</span><strong id="active-left">—</strong><span id="active-detail" class="muted"></span></div><div class="stat"><span class="muted" title="Người khác tìm trận và được ghép với bot của bạn">Số lượt phòng thủ</span><strong id="passive-left">—</strong><span id="passive-detail" class="muted"></span></div></div>
+<div class="row"><button id="find" class="primary" type="button">Tìm trận</button><button id="cancel" type="button" disabled>Hủy tìm trận</button></div><p id="wait-hint" class="muted spaced">Kết quả dự kiến trong 10 phút sau khi ghép; quá tải có thể lâu hơn.</p><p class="quick-links"><a href="/bot">Cập nhật bot</a> · <a href="/results">Xem kết quả</a></p></section></div></section>
+<section id="bot-page" class="page-width" hidden><section class="card"><h1>Bot của tôi</h1><div class="help-actions"><a class="button" href="https://drive.google.com/file/d/1r4dwmC-EvzwlE1Q-Z2Lzzpv7KNFr78jx/view" target="_blank" rel="noopener noreferrer">Đấu thử với máy</a><a href="https://docs.google.com/document/d/1Udnz0-J47yw_roNc5Bdts2EEgn7BT9RuiG7eZvtDLZ0/edit" target="_blank" rel="noopener noreferrer" class="button">Đọc hướng dẫn viết bot</a><a href="https://drive.google.com/file/d/1qZD4knzTBM_qit5z0RjFKllD-ziqdTnG/view" target="_blank" rel="noopener noreferrer" class="button">Lấy main.py mẫu từ Drive</a></div><p id="bot-state"></p><p id="update-state" class="muted"></p><p id="cooldown" class="muted"></p><p id="repository" class="muted"></p><a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLSfVLutxQFxB0DUbHC7RpAfu8G-Rw3D4GIJf3mZYjYM3fcRbZQ/viewform" target="_blank" rel="noopener noreferrer">Đổi link GitHub qua Form</a><button id="update" class="primary spaced" type="button">Cập nhật bot</button><p class="muted spaced">Chỉ đọc main.py ở thư mục gốc của kho GitHub công khai · Hai lần gửi cập nhật cách nhau 3 phút; trạng thái tự cập nhật 1 phút/lần.</p></section></section>
+<section id="results-page" class="page-width" hidden><section class="card"><h1>Kết quả của tôi</h1><div class="help-actions"><a class="button" href="https://docs.google.com/document/d/1Udnz0-J47yw_roNc5Bdts2EEgn7BT9RuiG7eZvtDLZ0/edit" target="_blank" rel="noopener noreferrer">Hướng dẫn xem kết quả ↗</a><a class="button" href="https://drive.google.com/file/d/1lfaBDrBbYPJRhikBKEGlKnfBxuunlYFm/view" target="_blank" rel="noopener noreferrer">Tải replay offline ↗</a></div><p class="muted">10 trận gần nhất · Log giữ 7 ngày · Tự cập nhật 1 phút/lần</p><p id="history-empty" class="muted">Chưa có trận nào.</p><ol id="matches"></ol><section id="manual" hidden><label for="manual-text">Bản ghi để sao chép</label><p class="muted">Nhấn Ctrl+C để sao chép phần đã chọn.</p><textarea id="manual-text" readonly></textarea></section></section></section></div>
+<section id="guide-page" hidden><h1>Tài liệu</h1><div class="help-actions"><a class="button" href="https://drive.google.com/file/d/1r4dwmC-EvzwlE1Q-Z2Lzzpv7KNFr78jx/view" target="_blank" rel="noopener noreferrer">Đấu thử với máy</a></div><div id="resource-guides" class="resources"><a href="https://docs.google.com/document/d/1Udnz0-J47yw_roNc5Bdts2EEgn7BT9RuiG7eZvtDLZ0/edit" target="_blank" rel="noopener noreferrer" class="card resource"><strong>Hướng dẫn & luật</strong></a><a href="https://drive.google.com/file/d/1lfaBDrBbYPJRhikBKEGlKnfBxuunlYFm/view" target="_blank" rel="noopener noreferrer" class="card resource"><strong>Tải replay offline</strong></a><a href="https://drive.google.com/file/d/1qZD4knzTBM_qit5z0RjFKllD-ziqdTnG/view" target="_blank" rel="noopener noreferrer" class="card resource"><strong>main.py mẫu</strong></a><a id="admin-map-guide" href="https://docs.google.com/document/d/1Pa-BfF-t86ggMAvzNxm4k0___yKCi8uq_54iXA-G9fY/edit" target="_blank" rel="noopener noreferrer" class="card resource" hidden><strong>Hướng dẫn bản đồ JSON</strong></a></div>
+</section>
+<section id="account-page" class="page-width" hidden><section class="card"><h1>Tài khoản</h1><a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLSfVLutxQFxB0DUbHC7RpAfu8G-Rw3D4GIJf3mZYjYM3fcRbZQ/viewform" target="_blank" rel="noopener noreferrer">Đổi / quên mật khẩu hoặc link GitHub</a><p class="muted">Xử lý khoảng 1 phút/lần.</p></section></section>
+<section id="admin-panel" hidden>
+<h1>Quản lý giải</h1><p id="admin-overview" class="muted"></p>
+<div>
+<section class="card" id="admin-controls"><h2>Nhận trận và cập nhật bot</h2><div class="help-actions"><a class="button" href="https://docs.google.com/document/d/1Pa-BfF-t86ggMAvzNxm4k0___yKCi8uq_54iXA-G9fY/edit" target="_blank" rel="noopener noreferrer">Hướng dẫn bản đồ JSON ↗</a></div><label for="pause-reason">Lời nhắn khi tạm dừng</label><input id="pause-reason" maxlength="200" placeholder="Ví dụ: Đang thay bản đồ">
+<div class="row spaced"><button id="pause" type="button">Tạm dừng</button><button id="resume" type="button">Nhận trận trở lại</button></div><div class="row spaced"><button id="lock-updates" type="button">Tạm dừng cập nhật bot</button><button id="unlock-updates" type="button">Cho cập nhật bot trở lại</button></div>
+<p class="muted">Tạm dừng cập nhật chỉ chặn yêu cầu lấy mã mới từ GitHub; bot hiện có vẫn thi đấu.</p>
+<p class="muted">Trận đã ghép vẫn được đấu xong. Đổi bản đồ không xóa điểm hay hoàn lại lượt đã dùng.</p>
+<img id="admin-board" class="board" alt="Bản đồ hiện đang dùng"><form id="map-form"><label for="map-json">Đổi bản đồ: dán nội dung tệp JSON</label><textarea id="map-json" maxlength="262144" required></textarea><p class="muted">Có thể dán JSON bản đồ hoặc cả gói cấu hình đấu thử chứa bản đồ và 3 mã bot.</p><label for="practice-beginner">main.py của bot sơ cấp</label><textarea id="practice-beginner" maxlength="65536" spellcheck="false" required></textarea><label for="practice-intermediate">main.py của bot trung cấp</label><textarea id="practice-intermediate" maxlength="65536" spellcheck="false" required></textarea><label for="practice-advanced">main.py của bot cao cấp</label><textarea id="practice-advanced" maxlength="65536" spellcheck="false" required></textarea><button class="spaced" type="submit">Lưu bản đồ và 3 bot đấu thử</button></form><p class="muted">Tạm dừng trước khi đổi. Sau khi đổi, bấm Nhận trận trở lại.</p></section>
+<section class="card" id="admin-students"><h2>Tài khoản sinh viên</h2><label for="student-select">Chọn sinh viên</label><select id="student-select"></select><label for="block-reason">Lý do khóa (không bắt buộc)</label><input id="block-reason" maxlength="200"><div class="row spaced"><button id="block" type="button">Khóa tài khoản</button><button id="unblock" type="button">Mở khóa</button></div><p id="blocked-list" class="muted"></p>
+<form id="reset-form"><label for="reset-password">Đặt mật khẩu mới cho sinh viên đã chọn</label><input id="reset-password" type="password" minlength="12" maxlength="256" autocomplete="new-password" required><button class="spaced" type="submit">Đặt lại mật khẩu</button></form>
+<details><summary>Thêm tài khoản sinh viên</summary><form id="student-form"><label for="new-identity">Tên đăng nhập / MSSV</label><input id="new-identity" maxlength="40" required><label for="new-name">Tên hiển thị</label><input id="new-name" maxlength="100" required><label for="new-repository">Link kho GitHub (không bắt buộc)</label><input id="new-repository" type="url" maxlength="250"><p class="muted">Hệ thống chỉ đọc main.py ở thư mục gốc của kho GitHub công khai.</p><label for="new-password">Mật khẩu (ít nhất 12 ký tự)</label><input id="new-password" type="password" minlength="12" maxlength="256" autocomplete="new-password" required><button class="spaced" type="submit">Tạo tài khoản</button></form><p class="muted">Dùng trên website từ mọi máy. BXH cập nhật 2 phút/lần; quản trị viên hỗ trợ tài khoản cấp thủ công.</p></details>
+</section></div>
+<section class="card" id="admin-failures"><h2>Máy và luồng chấm</h2><p class="interval-note">Tự cập nhật 1 phút/lần.</p><p id="worker-mode" class="muted"></p><ul id="workers"></ul><h2 class="spaced">Trận gặp lỗi máy chấm</h2><ul id="failures"></ul><p class="muted">Trận hỏng do máy đã được trả lượt và không đổi điểm. Giữ thông báo lỗi để kiểm tra.</p></section>
+</section>
+
+</section></main><script id="portal-code">
+(function(){
+  'use strict';
+  const ids=['status','session-actions','who','own-elo','refresh','logout','login-panel','login-form','identity','password','workspace','notice','student-panel','admin-panel','request-state','wait-hint','active-left','active-detail','passive-left','passive-detail','find','cancel','matches','history-empty','manual','manual-text','bot-state','update-state','cooldown','repository','update','admin-overview','pause-reason','pause','resume','lock-updates','unlock-updates','map-form','map-json','student-select','block-reason','block','unblock','blocked-list','reset-form','reset-password','student-form','new-identity','new-name','new-password','failures','nav','arena-page','bot-page','results-page','guide-page','account-page','admin-controls','admin-students','admin-failures','current-board','admin-board','page-heading','practice-beginner','practice-intermediate','practice-advanced','practice-copy-box','practice-copy-text'];
+  const ui=Object.fromEntries(ids.map(id=>[id,document.getElementById(id)]));
+  let csrf='', busy=false, polling=false, revision=0, current=null, pollTimer=null, expiryTimer=null, practiceLoaded=false, navigationKey='';
+  const rendered=new Map();
+  function changed(key,value){const encoded=JSON.stringify(value);if(rendered.get(key)===encoded)return false;rendered.set(key,encoded);return true;}
+  function boardSource(id,source){const image=ui[id];if(image.getAttribute?image.getAttribute('src')!==source:image.src!==source)image.src=source;}
+  const text=(id,value)=>{if(ui[id].textContent!==value)ui[id].textContent=value;};
+  const states={idle:'Sẵn sàng tìm trận.',waiting:'Đang chờ đối thủ. Bạn có thể hủy tìm.',matched:'Đã có đối thủ. Máy đang chuẩn bị hoặc chấm trận.',pending:'Chờ máy chấm',running:'Đang đấu',completed:'Đã đấu xong',failed:'Lỗi máy — đã trả lượt',cancelled:'Đã hủy — đã trả lượt'};
+  const reasons={goal:'vào đích',missing_kind:'đối thủ hết một loại quân',material_advantage:'nhiều quân hơn khi hết số nước',move_limit:'hòa khi hết số nước',threefold_repetition:'bàn cờ lặp ba lần',cpu_timeout:'hết giờ tính toán',response_timeout:'không trả nước đúng hạn',memory_limit:'vượt bộ nhớ',runtime_error:'bot gặp lỗi khi chạy',format_error:'bot trả sai định dạng',startup_timeout:'bot khởi động quá lâu',startup_format_error:'bot khởi động sai định dạng',startup_runtime_error:'bot lỗi khi khởi động',startup_memory_limit:'bot vượt bộ nhớ khi khởi động'};
+  const unfinished=state=>['pending','running'].includes(state);
+  function waitMessage(row){return row.wait_seconds>=600?'Máy chấm đang chậm. Trận vẫn được giữ, không cần tìm lại.':row.job_state==='running'||row.state==='running'?'Đã ghép trận · Đang chấm.':'Đã ghép trận · Đang chờ máy chấm. Kết quả dự kiến trong 10 phút.';}
+  function schedulePoll(){
+    if(pollTimer!==null)clearTimeout(pollTimer);pollTimer=null;
+    const route=typeof location==='undefined'?'/arena':location.pathname;
+    const watchStudent=current?.user.role==='student'&&(['/arena','/results'].includes(route)||current.request.state==='waiting'||unfinished(current.request.job_state)||['pending','running'].includes(current.update?.state)||current.cooldown_seconds>0);
+    if(!current||!(watchStudent||current.user.role==='admin'&&route==='/system'))return;
+    pollTimer=setTimeout(async()=>{
+      pollTimer=null;
+      await backgroundRefresh();
+    },60000+Math.floor(Math.random()*1000));
+  }
+  async function backgroundRefresh(){
+    if(!current||busy||polling||document.hidden){schedulePoll();return;}
+    polling=true;const started=revision;
+    const wasWaiting=current.request?.state==='waiting';
+    const before=new Set((current.matches||[]).filter(row=>unfinished(row.state)).map(row=>row.match_id));
+    try{
+      if(!await refresh(true,started)||!current)return;
+      buttons();
+      if(current.user.role==='student'&&(current.matches||[]).some(row=>before.has(row.match_id)&&row.state==='completed'))message('Đã chấm xong. Mở Kết quả để xem.');
+      else if(wasWaiting&&current.request.state==='matched')message('Đã ghép trận. '+(current.request.job_state==='running'?'Đang chấm.':'Đang chờ máy chấm.'));
+    }catch(error){if(started===revision||!current&&revision===started+1)message(error.message,true);}
+    finally{polling=false;schedulePoll();}
+  }
+  function message(value,error=false){text('status',value);ui.status.className='status'+(error?' error':'');}
+  function element(tag,value,className){const node=document.createElement(tag);if(value!==undefined)node.textContent=value;if(className)node.className=className;return node;}
+  function signedOut(){revision++;navigationKey='';rendered.clear();csrf='';current=null;practiceLoaded=false;if(expiryTimer!==null)clearTimeout(expiryTimer);expiryTimer=null;document.getElementById('public-links').hidden=false;if(pollTimer!==null)clearTimeout(pollTimer);pollTimer=null;ui['login-panel'].hidden=false;ui.workspace.hidden=true;ui['session-actions'].hidden=true;ui.nav.hidden=true;text('page-heading','Thi đấu bot');ui.matches.replaceChildren();ui.manual.hidden=true;ui['manual-text'].value='';}
+  async function read(response,limit){
+    const length=response.headers.get('Content-Length');if(length!==null&&Number(length)>limit)throw Error('Dữ liệu quá lớn. Hãy báo người quản lý.');
+    if(!response.body||!response.body.getReader){const value=await response.text();if(new TextEncoder().encode(value).length>limit)throw Error('Dữ liệu quá lớn.');return value;}
+    const reader=response.body.getReader(),decoder=new TextDecoder('utf-8',{fatal:true});let size=0,value='';
+    try{while(true){const part=await reader.read();if(part.done)break;size+=part.value.byteLength;if(size>limit){await reader.cancel();throw Error('Dữ liệu quá lớn.');}value+=decoder.decode(part.value,{stream:true});}return value+decoder.decode();}finally{reader.releaseLock();}
+  }
+  async function request(path,body,raw=false){
+    const started=revision,controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
+    try{
+      const options={credentials:'same-origin',cache:'no-store',signal:controller.signal};
+      if(body!==undefined){options.method='POST';options.headers={'Content-Type':'application/json','X-CSRF-Token':csrf};options.body=JSON.stringify(body);}
+      const response=await fetch(path,options);const value=await read(response,raw?2097152:1048576);
+      if(!response.ok){if(response.status===401&&started===revision)signedOut();let error;try{error=JSON.parse(value).error;}catch{}throw Error(error||'Chưa thực hiện được. Hãy thử lại.');}
+      return raw?value:JSON.parse(value);
+    }catch(error){if(error.name==='AbortError')throw Error('Chờ quá lâu. Kiểm tra cửa sổ đang chạy hệ thống rồi thử lại.');if(error instanceof TypeError)throw Error('Không kết nối được máy. Kiểm tra hệ thống còn đang chạy.');throw error;}finally{clearTimeout(timer);}
+  }
+  function buttons(){
+    const disabled=new Map();
+    if(current&&!busy){
+      if(current.user.role==='student'){
+        disabled.set(ui.find,current.blocked||current.paused||!current.bot||current.request.state!=='idle'||current.quota.active.remaining<=0);
+        disabled.set(ui.cancel,current.request.state!=='waiting');
+        disabled.set(ui.update,current.blocked||current.updates_locked||!current.user.repository||current.cooldown_seconds>0||['pending','running'].includes(current.update?.state));
+      }else{
+        disabled.set(ui.pause,current.paused);disabled.set(ui.resume,!current.paused);disabled.set(ui['lock-updates'],current.updates_locked);disabled.set(ui['unlock-updates'],!current.updates_locked);
+        const selected=current.students.find(user=>user.identity===ui['student-select'].value);
+        disabled.set(ui.block,!selected||!!selected.locked);disabled.set(ui.unblock,!selected||!selected.locked);
+      }
+    }
+    document.querySelectorAll('button').forEach(button=>{const value=busy||!!disabled.get(button);if(button.disabled!==value)button.disabled=value;});
+  }
+  async function action(task){if(busy)return;revision++;busy=true;buttons();try{await task();}catch(error){message(error.message,true);}finally{busy=false;buttons();schedulePoll();}}
+  function render(data){
+    if(!data.user||!['student','admin'].includes(data.user.role)||typeof data.user.csrf!=='string')throw Error('Dữ liệu tài khoản chưa đúng.');
+    current=data;csrf=data.user.csrf;if(expiryTimer!==null)clearTimeout(expiryTimer);expiryTimer=null;if(Number.isFinite(data.user.session_expires_at)){const adminSession=data.user.role==='admin';expiryTimer=setTimeout(()=>{signedOut();message(adminSession?'Phiên 30 phút đã hết. Bạn có thể đăng nhập lại.':'Phiên 30 phút đã hết. Chờ 7 phút để đăng nhập lại.',true);},Math.max(0,data.user.session_expires_at*1000-Date.now()));}ui['login-panel'].hidden=true;ui.workspace.hidden=false;ui['session-actions'].hidden=false;text('who',data.user.role==='admin'?'Quản trị viên':data.user.display_name);
+    const admin=data.user.role==='admin';ui['own-elo'].hidden=admin;text('own-elo','Elo '+Math.round(data.elo??1000));
+    ui.notice.hidden=!(data.paused||data.blocked);text('notice',data.blocked?'Bot đang bị chặn. Liên hệ người quản lý để kiểm tra.':data.paused?'Đang tạm dừng nhận trận mới. '+data.pause_reason:'');
+    pages(data);
+    if(admin){
+      if(!practiceLoaded&&data.practice_config){for(const level of ['beginner','intermediate','advanced'])ui['practice-'+level].value=data.practice_config.bots[level];practiceLoaded=true;}
+      const google=data.google_sync;const sync=google?.last_error|| (google?.last_success?'Đã đồng bộ lúc '+new Date(google.last_success).toLocaleString('vi-VN'):google?.enabled?'Chưa có lần đồng bộ thành công':'Chưa bật');
+      text('admin-overview','Đang chờ: '+data.admin.waiting+' · Bot đang bận: '+data.admin.busy_players+' · Cập nhật bot: '+(data.updates_locked?'đang khóa':'đang mở')+' · Google: '+sync);
+      if(changed('students',data.students.map(user=>[user.identity,user.display_name,!!user.locked]))){const selected=ui['student-select'].value;ui['student-select'].replaceChildren();data.students.forEach(user=>{const option=element('option',user.identity+' · '+user.display_name+(user.locked?' · Đã khóa':''));option.value=user.identity;ui['student-select'].append(option);});ui['student-select'].value=data.students.some(user=>user.identity===selected)?selected:(data.students[0]?.identity||'');}
+      text('blocked-list','Đang khóa: '+(data.students.filter(user=>user.locked).map(user=>user.identity).join(', ')||'Không có'));
+      if(changed('failures',data.failures)){ui.failures.replaceChildren();data.failures.forEach(row=>ui.failures.append(element('li',row.match_id+': '+row.last_error)));if(!data.failures.length)ui.failures.append(element('li','Chưa có trận lỗi máy.'));}
+      const workerList=document.getElementById('workers');
+      document.getElementById('worker-mode').textContent=data.cluster?.mode==='distributed'?'Phân công cho các máy chấm đã đăng ký.':'Chấm trực tiếp trên máy đang chạy hệ thống.';
+      const rank=worker=>!worker.enabled?4:!worker.online?3:worker.slot_enabled===false?2:worker.match_id?1:0;
+      const labels=[...(data.cluster?.workers||[])].sort((a,b)=>rank(a)-rank(b)||String(a.display_name||a.worker_id).localeCompare(String(b.display_name||b.worker_id))).map(worker=>(worker.display_name||worker.worker_id)+' · '+(!worker.enabled?'Đã thu hồi khóa':!worker.online?'Chưa kết nối / mất kết nối':worker.match_id?'Đang chấm '+worker.match_id:worker.slot_enabled===false?'Tạm ngừng nhận trận theo cấu hình':'Đang rảnh')+(worker.last_error?' · '+worker.last_error:''));
+      if(data.cluster?.mode==='distributed'&&!labels.length)labels.push('Chưa đăng ký máy chấm.');
+      if(changed('workers',labels)){workerList.replaceChildren();labels.forEach(label=>workerList.append(element('li',label)));}
+      boardSource('admin-board','/board/'+data.map.sha256+'.svg');
+      return;
+    }
+    boardSource('current-board','/board/'+data.map.sha256+'.svg');
+    text('request-state',unfinished(data.request.job_state)?waitMessage(data.request):states[data.request.job_state||data.request.state]||'Đang xử lý.');
+    ui['wait-hint'].hidden=unfinished(data.request.job_state);
+    ['active','passive'].forEach(kind=>{const quota=data.quota[kind];text(kind+'-left','Còn '+quota.remaining+' lượt');text(kind+'-detail',quota.reserved?'Đã ghép: '+quota.reserved+' trận':'');});
+    text('bot-state',data.bot?'Bot đã sẵn sàng':'Chưa có bot hợp lệ.');
+    text('update-state',data.update?(data.update.message||({pending:'Đã nhận yêu cầu, chờ máy rảnh để cập nhật.',running:'Đang tải và kiểm tra bot.'}[data.update.state]||'')):'');
+    text('cooldown',data.updates_locked?'Người quản lý đang khóa cập nhật.':data.cooldown_seconds?'Còn khoảng '+Math.ceil(data.cooldown_seconds/60)+' phút trước lần cập nhật tiếp theo.':'');
+    text('repository',data.user.repository||'Chưa có link GitHub.');
+    if(data.matches.length>10)throw Error('Danh sách trận quá dài.');
+    if(data.matches.some(row=>!(/^[0-9a-f]{32}$/).test(row.match_id)))throw Error('Mã trận chưa đúng.');
+    const visibleMatches=data.matches.map(row=>[row.match_id,row.state,row.players,row.result,row.created_at_utc,row.log_available,row.log_error,unfinished(row.state)?waitMessage(row):null]);
+    if(!changed('matches',visibleMatches))return;
+    ui.matches.replaceChildren();ui['history-empty'].hidden=data.matches.length>0;ui.manual.hidden=true;ui['manual-text'].value='';
+    data.matches.forEach(row=>{
+      if(!/^[0-9a-f]{32}$/.test(row.match_id))throw Error('Mã trận chưa đúng.');
+      const item=element('li',undefined,'match'),info=element('div'),teams=element('div',undefined,'teams');
+      for(const side of ['A','B']){teams.append(element('span',side,'badge '+side.toLowerCase()),element('span',row.players[side]));}
+      info.append(teams);let result=unfinished(row.state)?waitMessage(row):states[row.state]||row.state;
+      if(row.result)result=(row.result.winner==='draw'?'Hòa':row.players[row.result.winner]+' thắng')+' · '+(reasons[row.result.reason]||row.result.reason)+(Number.isInteger(row.result.valid_move_count)?' · '+row.result.valid_move_count+' nước':'');
+      info.append(element('div',result),element('div',new Date(row.created_at_utc).toLocaleString('vi-VN'),'meta'));
+      if(row.log_error)info.append(element('div',row.log_error,'meta'));item.append(info);
+      if(row.log_available){const copy=element('button','Sao chép log');copy.type='button';copy.addEventListener('click',()=>action(()=>copyLog(row.match_id)));item.append(copy);}ui.matches.append(item);
+    });
+  }
+
+  function pages(data){
+    const admin=data.user.role==='admin';
+    document.getElementById('admin-map-guide').hidden=!admin;
+    const route=typeof location==='undefined'?'/arena':location.pathname;
+    const studentPages=[['arena','Thi đấu'],['bot','Bot của tôi'],['results','Kết quả'],['guide','Tài liệu'],['account','Tài khoản']];
+    const adminPages=[['manage','Điều hành'],['students','Sinh viên'],['system','Trạng thái'],['guide','Tài liệu']];
+    const allowed=admin?adminPages:studentPages;
+    const selected=allowed.some(([slug])=>'/'+slug===route)?route.slice(1):(admin?'manage':'arena');
+    const key=data.user.role+':'+selected;
+    if(navigationKey===key)return;navigationKey=key;
+    if(admin||selected!=='arena')ui['practice-copy-box'].hidden=true;
+    document.getElementById('public-links').hidden=true;ui.nav.hidden=false;ui.nav.replaceChildren();
+    const standings=element('a','Bảng xếp hạng ↗','standings-link');standings.append(element('small','Cập nhật 2 phút/lần'));standings.href='/standings';standings.target='_blank';standings.rel='noopener noreferrer';
+    for(const [slug,label] of allowed){if(slug==='guide')ui.nav.append(standings);const link=element('a',label,slug===selected?'active':'');link.href='/'+slug;if(slug===selected)link.setAttribute?.('aria-current','page');ui.nav.append(link);}
+    for(const slug of ['arena','bot','results','guide','account'])ui[slug+'-page'].hidden=slug!==selected;
+    ui['student-panel'].hidden=admin||['guide','account'].includes(selected);
+    ui['admin-panel'].hidden=!admin||!['manage','students','system'].includes(selected);
+    ui['admin-controls'].hidden=selected!=='manage';ui['admin-students'].hidden=selected!=='students';ui['admin-failures'].hidden=selected!=='system';
+    const title=allowed.find(([slug])=>slug===selected)?.[1]||'OTT v2';
+    text('page-heading',title);document.title=title+' · OTTv2';
+  }
+
+  async function refresh(light=false,expectedRevision=null){
+    const data=await request(light?'/api/status':'/api/me');
+    if(expectedRevision!==null&&expectedRevision!==revision)return false;
+    if(light&&current&&data.user?.role==='student'&&!Array.isArray(data.matches)){
+      const latest=data.latest_match,previous=current.matches.find(row=>row.match_id===latest?.match_id);
+      if(latest&&(!previous||latest.state!==previous.state&&!unfinished(latest.state))){
+        data.matches=(await request('/api/history')).matches;
+      }else{
+        data.matches=current.matches.map(row=>latest&&row.match_id===latest.match_id?{...row,state:latest.state,wait_seconds:data.request.wait_seconds??row.wait_seconds}:row);
+      }
+    }
+    if(expectedRevision!==null&&expectedRevision!==revision)return false;
+    render(data);return true;
+  }
+  async function copyLog(id){
+    ui.manual.hidden=true;ui['manual-text'].value='';const value=await request('/api/logs/'+id,undefined,true),record=JSON.parse(value);
+    if(record.match_id!==id||record.schema_version!==1)throw Error('Bản ghi không khớp trận đã chọn.');
+    try{if(!navigator.clipboard?.writeText)throw Error('unavailable');await navigator.clipboard.writeText(value);message('Đã sao chép. Mở trang xem lại rồi dán bản ghi vào.');}
+    catch{ui.manual.hidden=false;ui['manual-text'].value=value;ui['manual-text'].focus();ui['manual-text'].select();message('Trình duyệt chưa cho sao chép tự động. Nhấn Ctrl+C để sao chép phần đã chọn.');}
+  }
+  function click(id,path,body,success){ui[id].addEventListener('click',()=>action(async()=>{await request(path,typeof body==='function'?body():body);await refresh();message(success);}));}
+  function form(id,task){ui[id].addEventListener('submit',event=>{event.preventDefault();return action(task);});}
+  form('login-form',async()=>{await request('/api/login',{identity:ui.identity.value.trim(),password:ui.password.value});ui.password.value='';await refresh();message('');});
+  ui.refresh.addEventListener('click',()=>action(async()=>{await refresh();message('');}));
+  ui.logout.addEventListener('click',()=>action(async()=>{await request('/api/logout',{});signedOut();message('Đã đăng xuất.');}));
+  ui.find.addEventListener('click',()=>action(async()=>{const answer=await request('/api/find',{});message(answer.state==='matched'?'Đã ghép trận. Đang chờ máy chấm.':'Đang tìm đối thủ. Trang sẽ tự cập nhật.');await refresh();}));click('cancel','/api/cancel',{},'Đã hủy tìm. Không mất lượt.');
+  click('update','/api/update',{},'Đã nhận yêu cầu cập nhật bot.');
+  click('pause','/api/admin/pause',()=>({paused:true,reason:ui['pause-reason'].value}),'Đã tạm dừng nhận trận mới.');
+  click('resume','/api/admin/pause',{paused:false,reason:''},'Đã nhận trận trở lại.');
+  click('lock-updates','/api/admin/updates',{locked:true},'Đã khóa nhận cập nhật bot.');click('unlock-updates','/api/admin/updates',{locked:false},'Đã mở cập nhật bot.');
+  for(const id of ['block','unblock'])click(id,'/api/admin/account-lock',()=>({identity:ui['student-select'].value,locked:id==='block',reason:ui['block-reason'].value}),id==='block'?'Đã khóa tài khoản và kết thúc các phiên đăng nhập.':'Đã mở khóa. Sinh viên có thể đăng nhập lại.');
+  ui['student-select'].addEventListener('change',buttons);
+  ui['map-json'].addEventListener('input',()=>{try{const bundle=JSON.parse(ui['map-json'].value);if(bundle.type==='ottv2_practice_config'&&bundle.map&&bundle.bots){for(const level of ['beginner','intermediate','advanced'])ui['practice-'+level].value=bundle.bots[level]||'';ui['map-json'].value=JSON.stringify(bundle.map,null,2);}}catch{}});
+  form('map-form',async()=>{if(!current.paused)throw Error('Chưa đổi bản đồ: bạn cần bấm Tạm dừng nhận trận trước.');const bots=Object.fromEntries(['beginner','intermediate','advanced'].map(level=>[level,ui['practice-'+level].value]));await request('/api/admin/map',{map:ui['map-json'].value,practice_bots:bots});practiceLoaded=false;await refresh();message('Đã lưu bản đồ và 3 bot đấu thử. Bấm Nhận trận trở lại khi sẵn sàng.');});
+  for(const id of ['public','arena'])document.getElementById('copy-practice-'+id).addEventListener('click',()=>action(async()=>{const value=await request('/api/practice-config');if(value.type!=='ottv2_practice_config')throw Error('Chưa đọc được cấu hình đấu thử.');const source=JSON.stringify(value,null,2);try{await navigator.clipboard.writeText(source);ui['practice-copy-box'].hidden=true;message('Đã sao chép bản đồ và 3 bot. Dán vào nút Dán cấu hình từ website trong HTML đấu thử.');}catch{ui['practice-copy-box'].hidden=false;ui['practice-copy-text'].value=source;ui['practice-copy-text'].focus();ui['practice-copy-text'].select();message('Nhấn Ctrl+C để sao chép cấu hình đã chọn.');}}));
+  form('student-form',async()=>{await request('/api/admin/student',{identity:ui['new-identity'].value.trim(),display_name:ui['new-name'].value.trim(),repository:document.getElementById('new-repository').value.trim(),password:ui['new-password'].value});ui['new-password'].value='';await refresh();message('Đã tạo tài khoản. Sinh viên có thể đăng nhập trên website.');});
+  form('reset-form',async()=>{await request('/api/admin/password',{identity:ui['student-select'].value,password:ui['reset-password'].value});ui['reset-password'].value='';message('Đã đặt lại mật khẩu. Các lần đăng nhập cũ của sinh viên đã kết thúc.');});
+  document.addEventListener?.('visibilitychange',()=>{if(!document.hidden&&current)schedulePoll();});
+  action(async()=>{try{await refresh();message('');}catch(error){if(current)throw error;message(error.message==='Bạn cần đăng nhập.'?'':error.message,true);}});
+})();
+</script></body></html>

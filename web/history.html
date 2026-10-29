@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trận gần đây · OTTv2</title>
+<style>
+:root{color-scheme:light;--ink:#26362c;--muted:#647167;--line:#dce2d9;--green:#356247;--paper:#fffefb}*{box-sizing:border-box}body{margin:0;background:#f3f5ef;color:var(--ink);font:15px/1.5 system-ui,sans-serif}main{max-width:940px;margin:0 auto;padding:32px 20px 48px}.brand{font-size:13px;letter-spacing:.08em;font-weight:750;color:var(--green)}header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:24px}h1{font-size:30px;line-height:1.2;margin:8px 0}p{margin:8px 0;color:var(--muted)}button{border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);padding:10px 15px;font:inherit;cursor:pointer;white-space:nowrap}button:hover{background:#e8eee4}button:disabled{opacity:.5;cursor:wait}button:focus-visible,textarea:focus-visible{outline:3px solid #6197bd;outline-offset:3px}.copy{background:var(--green);color:white;border-color:var(--green)}.copy:hover{background:#294f38}.status{min-height:24px;font-size:14px;margin:12px 0}.status.error{color:#9b3a2e}.status.success{color:#2d6341}ol{list-style:none;margin:0;padding:0;display:grid;gap:10px}.match{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.teams{display:flex;gap:9px;flex-wrap:wrap;align-items:center;font-weight:650}.side{font-size:12px;border-radius:4px;padding:2px 6px;display:inline-block;margin-right:5px}.a{background:#f9e4df;color:#a74031}.b{background:#e3edf8;color:#31638c}.meta{font-size:13px;color:var(--muted);margin-top:5px}.result{margin-top:8px;font-size:14px}small{color:var(--muted)}.guide{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);font-size:14px}.guide strong{color:var(--ink)}.manual{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:18px}.manual label{display:block;font-weight:650}textarea{display:block;width:100%;height:150px;margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:6px;font:12px/1.45 ui-monospace,monospace;resize:vertical}[hidden]{display:none!important}@media(max-width:560px){main{padding:22px 14px}header{align-items:flex-start;gap:10px}h1{font-size:25px}header p{font-size:13px}.match{padding:14px;grid-template-columns:1fr}.copy{width:100%}header button{padding:8px 10px;font-size:13px}}
+</style>
+</head>
+<body>
+<main>
+  <header><div><div class="brand">OTT v2 · CỤC BỘ</div><h1>Trận gần đây</h1><p>Tối đa 10 trận gần nhất. Sao chép log để xem lại offline.</p></div><button id="refresh" type="button">Làm mới</button></header>
+  <p id="status" class="status" role="status" aria-live="polite">Đang lấy danh sách trận…</p>
+  <ol id="matches" aria-label="Các trận gần nhất"></ol>
+  <section id="manual" class="manual" hidden><label for="log-text">Sao chép thủ công</label><p>Trình duyệt chưa cho phép ghi clipboard. Chọn toàn bộ nội dung bên dưới, rồi nhấn Ctrl+C (hoặc ⌘C).</p><textarea id="log-text" readonly aria-label="Log JSON để sao chép thủ công"></textarea></section>
+  <div class="guide"><strong>Xem lại trận</strong><p>1. Bấm <strong>Sao chép log</strong> ở trận cần xem.<br>2. Mở replay offline, chọn <strong>Dán JSON / Thông tin trận</strong>.<br>3. Dán nội dung rồi bấm <strong>Mở JSON đã dán</strong>.</p><small>Danh sách cục bộ dùng thư mục log đang chọn. Chưa có đăng nhập tài khoản.</small></div>
+</main>
+<script id="history-code">
+(function () {
+  "use strict";
+  const MAX_LOG_BYTES = 2 * 1024 * 1024;
+  const ui = {};
+  ["refresh","status","matches","manual","log-text"].forEach(id => { ui[id] = document.getElementById(id); });
+  let busy = false;
+  const copyButtons = [];
+  function status(text, kind) { ui.status.textContent = text; ui.status.className = "status" + (kind ? " " + kind : ""); }
+  function lock(value) { busy = value; ui.refresh.disabled = value; copyButtons.forEach(button => { button.disabled = value; }); }
+  function node(tag, text, className) { const item = document.createElement(tag); if (text !== undefined) item.textContent = text; if (className) item.className = className; return item; }
+  function clearManual() { ui.manual.hidden = true; ui["log-text"].value = ""; }
+  async function readText(response, limit) {
+    const length = response.headers.get("Content-Length");
+    if (length !== null && Number(length) > limit) throw Error("Dữ liệu vượt giới hạn cho phép.");
+    if (!response.body || !response.body.getReader) {
+      const text = await response.text();
+      if (new TextEncoder().encode(text).length > limit) throw Error("Dữ liệu vượt giới hạn cho phép.");
+      return text;
+    }
+    const reader = response.body.getReader(), decoder = new TextDecoder("utf-8", {fatal:true});
+    let size = 0, text = "";
+    try {
+      while (true) {
+        const next = await reader.read();
+        if (next.done) break;
+        size += next.value.byteLength;
+        if (size > limit) { await reader.cancel(); throw Error("Dữ liệu vượt giới hạn cho phép."); }
+        text += decoder.decode(next.value, {stream:true});
+      }
+      return text + decoder.decode();
+    } finally { reader.releaseLock(); }
+  }
+  async function get(path, limit) {
+    const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 10000);
+    try {
+      const response = await fetch(path, {cache:"no-store", signal:controller.signal, credentials:"same-origin"});
+      if (!response.ok) {
+        if (response.status === 404) throw Error("Không còn tìm thấy log trận. Hãy làm mới danh sách.");
+        if (response.status === 409) throw Error("Log hoặc thư mục trận chưa hợp lệ. Hãy kiểm tra trên máy chạy API.");
+        throw Error("Chưa đọc được dữ liệu. Hãy thử lại.");
+      }
+      return await readText(response, limit);
+    } catch (error) {
+      if (error.name === "AbortError") throw Error("Chờ quá lâu. Hãy kiểm tra API rồi thử lại.");
+      if (error instanceof TypeError) throw Error("Không kết nối được API. Hãy kiểm tra server đang chạy.");
+      throw error;
+    } finally { clearTimeout(timer); }
+  }
+  async function copyLog(matchId) {
+    if (busy) return;
+    lock(true); clearManual(); status("Đang lấy log trận…");
+    try {
+      const text = await get("/matches/" + matchId, MAX_LOG_BYTES);
+      const record = JSON.parse(text);
+      if (record.match_id !== matchId || record.schema_version !== 1) throw Error("Log không khớp trận đã chọn.");
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) throw Error("clipboard unavailable");
+        await navigator.clipboard.writeText(text);
+        status("Đã sao chép log. Mở replay offline và dán vào ô JSON.", "success");
+      } catch (_) {
+        ui["log-text"].value = text; ui.manual.hidden = false;
+        ui["log-text"].focus(); ui["log-text"].select();
+        status("Log đã sẵn sàng bên dưới. Nhấn Ctrl+C (hoặc ⌘C) để sao chép.");
+      }
+    } catch (error) { status(error instanceof SyntaxError ? "Log JSON bị hỏng. Hãy kiểm tra lại tệp gốc." : error.message, "error"); }
+    finally { lock(false); }
+  }
+  function renderMatch(match) {
+    const row = node("li", undefined, "match"), info = node("div"), teams = node("div", undefined, "teams");
+    for (const side of ["A", "B"]) {
+      const team = node("span"); team.append(node("span", side, "side " + side.toLowerCase()), node("span", match.bots[side])); teams.append(team);
+      if (side === "A") teams.append(node("small", "vs"));
+    }
+    const date = new Date(match.created_at_utc);
+    const time = Number.isNaN(date.getTime()) ? "Chưa rõ thời điểm" : date.toLocaleString("vi-VN");
+    info.append(teams, node("div", time + " · " + match.match_id.slice(0,8), "meta"));
+    const result = match.result, count = result.valid_move_count;
+    const winner = result.winner === "A" || result.winner === "B" ? result.winner + " thắng" : "Hòa / chưa có bên thắng";
+    info.append(node("div", winner + " · " + count + " nước", "result"));
+    const button = node("button", "Sao chép log", "copy"); button.type = "button";
+    button.setAttribute("aria-label", "Sao chép log trận " + match.match_id.slice(0,8));
+    button.addEventListener("click", () => copyLog(match.match_id)); copyButtons.push(button);
+    row.append(info, button); return row;
+  }
+  async function refresh() {
+    if (busy) return;
+    lock(true); clearManual(); status("Đang lấy danh sách trận…");
+    try {
+      const data = JSON.parse(await get("/matches", 64 * 1024));
+      if (!Array.isArray(data.matches) || data.matches.length > 10) throw Error("Danh sách trận chưa hợp lệ.");
+      for (const match of data.matches) {
+        if (!match || !/^[0-9a-f]{32}$/.test(match.match_id) || !match.bots ||
+            typeof match.bots.A !== "string" || typeof match.bots.B !== "string" || !match.result ||
+            !Number.isInteger(match.result.valid_move_count) || match.result.valid_move_count < 0) throw Error("Danh sách trận chưa hợp lệ.");
+      }
+      ui.matches.replaceChildren(); copyButtons.length = 0;
+      data.matches.forEach(match => { ui.matches.append(renderMatch(match)); });
+      if (!data.matches.length) status(data.skipped_count ? "Chưa có log đọc được. Hãy kiểm tra tệp gốc." : "Chưa có trận để hiển thị.");
+      else status("Đang hiển thị " + data.matches.length + " trận gần nhất." + (data.skipped_count ? " Một số log hỏng đã được bỏ qua." : ""));
+    } catch (error) { status(error instanceof SyntaxError ? "Danh sách JSON bị hỏng. Hãy thử lại." : error.message, "error"); }
+    finally { lock(false); }
+  }
+  ui.refresh.addEventListener("click", refresh);
+  refresh();
+}());
+</script>
+</body>
+</html>

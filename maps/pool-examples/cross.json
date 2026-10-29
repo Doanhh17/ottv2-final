@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "name": "cross",
+  "board": {
+    "a1": {
+      "side": "A",
+      "kind": "rock"
+    },
+    "a9": {
+      "side": "B",
+      "kind": "scissors"
+    },
+    "b1": {
+      "side": "A",
+      "kind": "paper"
+    },
+    "b9": {
+      "side": "B",
+      "kind": "paper"
+    },
+    "c1": {
+      "side": "A",
+      "kind": "scissors"
+    },
+    "c9": {
+      "side": "B",
+      "kind": "rock"
+    },
+    "d1": {
+      "side": "A",
+      "kind": "rock"
+    },
+    "d9": {
+      "side": "B",
+      "kind": "scissors"
+    },
+    "e1": {
+      "side": "A",
+      "kind": "paper"
+    },
+    "e9": {
+      "side": "B",
+      "kind": "paper"
+    },
+    "f1": {
+      "side": "A",
+      "kind": "scissors"
+    },
+    "f9": {
+      "side": "B",
+      "kind": "rock"
+    },
+    "g1": {
+      "side": "A",
+      "kind": "rock"
+    },
+    "g9": {
+      "side": "B",
+      "kind": "scissors"
+    },
+    "h1": {
+      "side": "A",
+      "kind": "paper"
+    },
+    "h9": {
+      "side": "B",
+      "kind": "paper"
+    },
+    "i1": {
+      "side": "A",
+      "kind": "scissors"
+    },
+    "i9": {
+      "side": "B",
+      "kind": "rock"
+    }
+  },
+  "goals": {
+    "A": "i9",
+    "B": "a1"
+  },
+  "bombs": [
+    "d5",
+    "f5"
+  ],
+  "obstacles": [
+    "e5"
+  ]
+}

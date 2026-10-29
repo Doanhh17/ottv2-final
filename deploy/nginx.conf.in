@@ -1,0 +1,52 @@
+# Place in /etc/nginx/sites-available/ottv2 after replacing @@DOMAIN@@.
+# HTTP serves ACME only until Certbot enables HTTPS. The app rejects HTTP writes.
+limit_req_zone $binary_remote_addr zone=ottv2_ip:10m rate=10r/s;
+limit_req_zone $server_name zone=ottv2_login:1m rate=2r/s;
+limit_req_zone $binary_remote_addr zone=ottv2_worker_ip:1m rate=40r/s;
+# Session-shaped keys share a small polling bucket. The application still checks
+# the token and account lock on every request; random strings do not authenticate.
+map $cookie_ottv2_session $ottv2_poll_key {
+    default $binary_remote_addr;
+    "~^[A-Za-z0-9_-]{43}$" $cookie_ottv2_session;
+}
+limit_req_zone $ottv2_poll_key zone=ottv2_poll:10m rate=2r/s;
+limit_req_zone $binary_remote_addr zone=ottv2_poll_ip:10m rate=400r/s;
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name @@DOMAIN@@;
+    server_tokens off;
+    client_max_body_size 96k;
+    client_body_timeout 10s;
+    client_header_timeout 10s;
+    keepalive_timeout 45s;
+    limit_req_status 429;
+    limit_req zone=ottv2_ip burst=40 nodelay;
+
+    location = /api/status {
+        # Accommodate a campus NAT without relaxing login or worker limits.
+        limit_req zone=ottv2_poll burst=4 nodelay;
+        limit_req zone=ottv2_poll_ip burst=800 nodelay;
+        include /etc/nginx/snippets/ottv2-proxy.conf;
+    }
+    location = /api/worker {
+        # Four hosts at 6/12/6/12 slots need about 18 idle polls/second.
+        # This location has its own limit; Bearer authentication stays in the app.
+        limit_req zone=ottv2_worker_ip burst=80 nodelay;
+        client_max_body_size 16m;
+        include /etc/nginx/snippets/ottv2-proxy.conf;
+    }
+    location = /api/admin/map {
+        client_max_body_size 320k;
+        include /etc/nginx/snippets/ottv2-proxy.conf;
+    }
+    location = /api/login {
+        limit_req zone=ottv2_login burst=10;
+        limit_req zone=ottv2_ip burst=40 nodelay;
+        include /etc/nginx/snippets/ottv2-proxy.conf;
+    }
+    location / {
+        include /etc/nginx/snippets/ottv2-proxy.conf;
+    }
+}

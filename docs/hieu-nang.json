@@ -1,0 +1,433 @@
+{
+  "schema_version": 1,
+  "date_local": "2026-10-30",
+  "timezone": "Asia/Saigon",
+  "host": {
+    "vm": "D2as_v4",
+    "logical_cpus": 2,
+    "ram_gib": 8
+  },
+  "rules": {
+    "cpu_budget_seconds": 7.0,
+    "response_limit_seconds": 2.5,
+    "memory_limit_mib_per_bot": 64,
+    "max_valid_moves": 50,
+    "move_limit_tiebreak": "piece_count"
+  },
+  "public_http": {
+    "measured_at_utc": "2026-10-29T21:07:08.921507+00:00",
+    "url": "https://ottv2-nhom12.koreacentral.cloudapp.azure.com",
+    "requests": 90,
+    "concurrency_limit": 8,
+    "offered_rps": 3.0,
+    "elapsed_seconds": 30.091562300003716,
+    "achieved_rps": 2.9908716304832366,
+    "status_counts": {
+      "200": 90
+    },
+    "p50_seconds": 0.357571900000039,
+    "p95_seconds": 0.8457549000013387,
+    "max_seconds": 1.3587605000066105,
+    "received_bytes": 1829610,
+    "scope": "Public HTML, health, board only; no login, authenticated dashboard, match creation or log download."
+  },
+  "authenticated_api": {
+    "measured_at_utc": "2026-10-29T21:10:10.919187+00:00",
+    "logical_cpus": 2,
+    "synthetic_students": 4000,
+    "synthetic_pending_jobs": 2000,
+    "scope": "Separate generator and synthetic API process on the same VM. Direct HTTP loopback; excludes TLS, Internet, login hashing, Google sync and bot execution. Production website stays active. No real accounts or jobs changed.",
+    "phases": [
+      {
+        "offered_rps": 25,
+        "requests": 500,
+        "elapsed_seconds": 19.964,
+        "achieved_rps": 25.046,
+        "status_counts": {
+          "200": 500
+        },
+        "identity_mismatches": 0,
+        "p50_ms": 2.451,
+        "p95_ms": 3.104,
+        "max_ms": 4.434,
+        "application_peak_rss_kib": 32132,
+        "application_cpu_seconds": 1.1,
+        "production_health": [
+          {
+            "status": "200",
+            "seconds": 0.00828035399899818
+          },
+          {
+            "status": "200",
+            "seconds": 0.008338662999449298
+          },
+          {
+            "status": "200",
+            "seconds": 0.008405627995671239
+          },
+          {
+            "status": "200",
+            "seconds": 0.008045032998779789
+          },
+          {
+            "status": "200",
+            "seconds": 0.00797765799507033
+          },
+          {
+            "status": "200",
+            "seconds": 0.011198198000784032
+          },
+          {
+            "status": "200",
+            "seconds": 0.009218787999998312
+          },
+          {
+            "status": "200",
+            "seconds": 0.0088597190042492
+          },
+          {
+            "status": "200",
+            "seconds": 0.008574170002248138
+          },
+          {
+            "status": "200",
+            "seconds": 0.008327823998115491
+          },
+          {
+            "status": "200",
+            "seconds": 0.008470187996863388
+          },
+          {
+            "status": "200",
+            "seconds": 0.008748460000788327
+          },
+          {
+            "status": "200",
+            "seconds": 0.00850367399834795
+          },
+          {
+            "status": "200",
+            "seconds": 0.008463136000500526
+          },
+          {
+            "status": "200",
+            "seconds": 0.009137197994277813
+          },
+          {
+            "status": "200",
+            "seconds": 0.008756172996072564
+          },
+          {
+            "status": "200",
+            "seconds": 0.010575900996627752
+          },
+          {
+            "status": "200",
+            "seconds": 0.0084765600040555
+          },
+          {
+            "status": "200",
+            "seconds": 0.008259233996795956
+          },
+          {
+            "status": "200",
+            "seconds": 0.008611878998635802
+          }
+        ]
+      },
+      {
+        "offered_rps": 100,
+        "requests": 2000,
+        "elapsed_seconds": 19.995,
+        "achieved_rps": 100.026,
+        "status_counts": {
+          "200": 2000
+        },
+        "identity_mismatches": 0,
+        "p50_ms": 2.464,
+        "p95_ms": 3.139,
+        "max_ms": 10.157,
+        "application_peak_rss_kib": 32132,
+        "application_cpu_seconds": 4.457,
+        "production_health": [
+          {
+            "status": "200",
+            "seconds": 0.008770968997851014
+          },
+          {
+            "status": "200",
+            "seconds": 0.008857831002387684
+          },
+          {
+            "status": "200",
+            "seconds": 0.007749057993351016
+          },
+          {
+            "status": "200",
+            "seconds": 0.008406456996453926
+          },
+          {
+            "status": "200",
+            "seconds": 0.008780406002188101
+          },
+          {
+            "status": "200",
+            "seconds": 0.008219356001063716
+          },
+          {
+            "status": "200",
+            "seconds": 0.008002891001524404
+          },
+          {
+            "status": "200",
+            "seconds": 0.007839186997443903
+          },
+          {
+            "status": "200",
+            "seconds": 0.008897147999959998
+          },
+          {
+            "status": "200",
+            "seconds": 0.011404452998249326
+          },
+          {
+            "status": "200",
+            "seconds": 0.00941102800425142
+          },
+          {
+            "status": "200",
+            "seconds": 0.010032503996626474
+          },
+          {
+            "status": "200",
+            "seconds": 0.00970512100320775
+          },
+          {
+            "status": "200",
+            "seconds": 0.008257311004854273
+          },
+          {
+            "status": "200",
+            "seconds": 0.008592099002271425
+          },
+          {
+            "status": "200",
+            "seconds": 0.00988790400151629
+          },
+          {
+            "status": "200",
+            "seconds": 0.007940807998238597
+          },
+          {
+            "status": "200",
+            "seconds": 0.008532826002920046
+          },
+          {
+            "status": "200",
+            "seconds": 0.011893695998878684
+          },
+          {
+            "status": "200",
+            "seconds": 0.008527412996045314
+          }
+        ]
+      },
+      {
+        "offered_rps": 200,
+        "requests": 4000,
+        "elapsed_seconds": 20.003,
+        "achieved_rps": 199.973,
+        "status_counts": {
+          "200": 4000
+        },
+        "identity_mismatches": 0,
+        "p50_ms": 2.323,
+        "p95_ms": 3.361,
+        "max_ms": 27.228,
+        "application_peak_rss_kib": 33616,
+        "application_cpu_seconds": 8.643,
+        "production_health": [
+          {
+            "status": "200",
+            "seconds": 0.008142202997987624
+          },
+          {
+            "status": "200",
+            "seconds": 0.007996842003194615
+          },
+          {
+            "status": "200",
+            "seconds": 0.007890172004408669
+          },
+          {
+            "status": "200",
+            "seconds": 0.008495844995195512
+          },
+          {
+            "status": "200",
+            "seconds": 0.022307594001176767
+          },
+          {
+            "status": "200",
+            "seconds": 0.008587985001213383
+          },
+          {
+            "status": "200",
+            "seconds": 0.00848741899972083
+          },
+          {
+            "status": "200",
+            "seconds": 0.008219442999688908
+          },
+          {
+            "status": "200",
+            "seconds": 0.008627198003523517
+          },
+          {
+            "status": "200",
+            "seconds": 0.008310072000313085
+          },
+          {
+            "status": "200",
+            "seconds": 0.008862572998623364
+          },
+          {
+            "status": "200",
+            "seconds": 0.007908305997261778
+          },
+          {
+            "status": "200",
+            "seconds": 0.008278679997602012
+          },
+          {
+            "status": "200",
+            "seconds": 0.012689586001215503
+          },
+          {
+            "status": "200",
+            "seconds": 0.008595271996455267
+          },
+          {
+            "status": "200",
+            "seconds": 0.008819533002679236
+          },
+          {
+            "status": "200",
+            "seconds": 0.009705329001008067
+          },
+          {
+            "status": "200",
+            "seconds": 0.012148437002906576
+          },
+          {
+            "status": "200",
+            "seconds": 0.009575717995176092
+          },
+          {
+            "status": "200",
+            "seconds": 0.010103638996952213
+          }
+        ]
+      }
+    ]
+  },
+  "worker": {
+    "measured_at_utc": "2026-10-29T21:11:30.304239+00:00",
+    "limits": {
+      "cpu_budget_seconds": 7.0,
+      "response_limit_seconds": 2.5,
+      "memory_limit_mib_per_bot": 64,
+      "max_valid_moves": 50,
+      "move_limit_tiebreak": "piece_count"
+    },
+    "scope": "Eight synthetic Isolate matches, depth-3 alpha versus guardian, on live VPS D2as_v4 with website running. Real queue drained and VPS pool temporarily stopped/restored. No HTTP load generator during grading. Excludes Internet and other physical workers.",
+    "source_sha256": {
+      "depth3-alpha": "9fdb1fa96560f6efd471f9c5465e0380871279b44d540feb185f89c0b0d17b20",
+      "depth3-guardian": "8bff64a16df7e3dc471e5bddd3606bbe6faf232d139045db52566802c77a255b"
+    },
+    "batches": [
+      {
+        "slots": 4,
+        "matches": 8,
+        "elapsed_seconds": 16.96,
+        "matches_per_hour": 1698.2,
+        "outcomes": {
+          "goal": 4,
+          "move_limit": 2,
+          "material_advantage": 2
+        },
+        "all_cleanup_complete": true,
+        "max_response_seconds": 0.652020433000871,
+        "trials": [
+          {
+            "seed": 60000,
+            "reason": "goal",
+            "elapsed": 9.39212055799726,
+            "cleanup_complete": true,
+            "max_response_seconds": 0.6156086530027096
+          },
+          {
+            "seed": 60001,
+            "reason": "move_limit",
+            "elapsed": 8.877433684996504,
+            "cleanup_complete": true,
+            "max_response_seconds": 0.4827460979940952
+          },
+          {
+            "seed": 60002,
+            "reason": "goal",
+            "elapsed": 9.343580738997844,
+            "cleanup_complete": true,
+            "max_response_seconds": 0.6212774059968069
+          },
+          {
+            "seed": 60003,
+            "reason": "material_advantage",
+            "elapsed": 9.939070800995978,
+            "cleanup_complete": true,
+            "max_response_seconds": 0.652020433000871
+          },
+          {
+            "seed": 60004,
+            "reason": "goal",
+            "elapsed": 2.064435592998052,
+            "cleanup_complete": true,
+            "max_response_seconds": 0.13745233599911444
+          },
+          {
+            "seed": 60005,
+            "reason": "move_limit",
+            "elapsed": 7.295646004997252,
+            "cleanup_complete": true,
+            "max_response_seconds": 0.47258787600003416
+          },
+          {
+            "seed": 60006,
+            "reason": "goal",
+            "elapsed": 7.298364662994572,
+            "cleanup_complete": true,
+            "max_response_seconds": 0.46997088699572487
+          },
+          {
+            "seed": 60007,
+            "reason": "material_advantage",
+            "elapsed": 6.977802813999006,
+            "cleanup_complete": true,
+            "max_response_seconds": 0.4898868140007835
+          }
+        ]
+      }
+    ]
+  },
+  "calculations": {
+    "status_rps_for_4000_at_60_seconds": 66.67,
+    "sample_matches_per_hour": 1698.2,
+    "basis": "Arithmetic from configuration or small observed batch; not additional measured capacity."
+  },
+  "limitations": [
+    "API HTTP loopback excludes Nginx/TLS/Internet/login hashing/Google and simultaneous heavy bot execution.",
+    "Public probe is only 3 requests per second, not a saturation test.",
+    "Eight depth-3 matches do not represent arbitrary bots using all CPU or a whole hour.",
+    "Other PCs not benchmarked together; 4000 active participants not accepted as end-to-end capacity."
+  ]
+}
