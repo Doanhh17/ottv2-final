@@ -50,7 +50,7 @@ Mỗi lần đọc trạng thái dùng cùng một giao dịch SQLite để lấ
 
 ## 4. Tải bot GitHub theo commit và dùng cache có giới hạn
 
-Ứng dụng chốt commit bằng API, tải ZIP công khai từ codeload đúng commit đó. Cache RAM giữ tối đa **16 ZIP, tổng 8 MiB**, tránh tải lặp cùng nội dung. Khi GitHub giới hạn tốc độ, yêu cầu được giữ và thử lại vào lúc phù hợp; bot đang hợp lệ vẫn được dùng.
+Khi xử lý yêu cầu Cập nhật bot, ứng dụng đọc commit mới nhất của nhánh mặc định bằng API rồi tải ZIP công khai từ codeload đúng commit đó. Lần cập nhật tiếp theo đọc lại commit mới nhất. Cache phân biệt theo repository và commit, giữ tối đa **16 ZIP, tổng 8 MiB**, tránh tải lặp cùng nội dung. Khi GitHub giới hạn tốc độ, yêu cầu được giữ và thử lại vào lúc phù hợp; bot đang hợp lệ vẫn được dùng. Trận đã ghép giữ phiên bản được chốt cho trận.
 
 GitHub token chỉ là cấu hình tùy chọn cho hạn mức API. Nếu dùng, token đặt riêng ngoài nguồn, chỉ gửi đến API GitHub, không gửi đến codeload và không đóng trong ZIP. Cách cấu hình ở [TRIEN_KHAI_VPS.md](TRIEN_KHAI_VPS.md).
 
@@ -70,7 +70,7 @@ Trận đã ghép giữ bản đồ, phiên bản bot và giới hạn của ch�
 
 Mỗi PC cài môi trường và dịch vụ một lần, sau đó tạo **nút Desktop** bằng `scripts/install_worker_desktop.ps1`. Những lần sau bấm đúp đúng nút; chương trình giữ khóa, profile và không mở pool thứ hai. VPS không cần Desktop và không tự bật máy tính từ xa.
 
-Nguồn công khai được quản lý trên GitHub cùng tài liệu, cấu hình công khai và SHA256SUMS. Bộ xuất nguồn lọc riêng mã được phép công bố, không chép lịch sử Git làm việc, dữ liệu tài khoản, khóa hoặc output. Cách đẩy nguồn ở [GITHUB.md](GITHUB.md); cách cài máy ở [MAY_CHAM.md](MAY_CHAM.md).
+Nguồn và tài liệu vận hành được quản lý tập trung, có SHA256SUMS để kiểm tính nguyên vẹn. Khóa và dữ liệu vận hành đặt riêng. Người tổ chức cài thêm PC theo [MAY_CHAM.md](MAY_CHAM.md), tạo nút Desktop một lần và dùng lại những ngày sau.
 
 Số đo hiện hành tập trung tại [HIEU_NANG.md](HIEU_NANG.md), có [JSON gốc](hieu-nang.json) để đối chiếu. Độ trễ API, độ trễ qua Internet và tốc độ chấm là ba phép đo khác nhau; công thức ước tính được ghi riêng.
 

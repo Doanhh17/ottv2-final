@@ -56,14 +56,14 @@ Cần thấy Isolate 2.7, cấu hình hợp lệ và `active`. RAM khả dụng 
 
 ## 4. Đặt mã nguồn trên máy chấm
 
-Trên **Windows**, clone repository theo [GITHUB.md](GITHUB.md). Giữ thư mục có README và scripts để tạo nút Desktop ở mục 7.
+Trên **Windows**, lấy nguồn từ [repository dự án](https://github.com/Doanhh17/ottv2-final). Giữ thư mục có README và scripts để tạo nút Desktop ở mục 7.
 
-Trong **Ubuntu máy chấm**, thay `TEN_GITHUB` bằng tên tài khoản sở hữu repository rồi chạy:
+Trong **Ubuntu máy chấm**, chạy:
 
 ```bash
 sudo apt update
 sudo apt install -y git
-git clone https://github.com/TEN_GITHUB/ottv2.git ~/ottv2-source
+git clone https://github.com/Doanhh17/ottv2-final.git ~/ottv2-source
 cd ~/ottv2-source
 sha256sum -c SHA256SUMS
 ```

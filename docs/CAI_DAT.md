@@ -14,12 +14,12 @@ wsl -d Ubuntu-24.04
 
 ## 2. Đưa mã nguồn vào Ubuntu
 
-Lấy URL repository theo [GITHUB.md](GITHUB.md), thay `TEN_GITHUB` trong lệnh. Trong **Ubuntu**:
+Trong **Ubuntu**, lấy nguồn dự án:
 
 ```bash
 sudo apt update
 sudo apt install -y git
-git clone https://github.com/TEN_GITHUB/ottv2.git ~/ottv2-project
+git clone https://github.com/Doanhh17/ottv2-final.git ~/ottv2-project
 cd ~/ottv2-project
 sha256sum -c SHA256SUMS
 ```

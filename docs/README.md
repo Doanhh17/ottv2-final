@@ -16,7 +16,6 @@ Chọn đúng công việc trong bảng. Không cần đọc hết thư mục n�
 | Đọc kiến trúc và cách hệ thống xử lý dữ liệu | [Thiết kế](THIET_KE.md) |
 | Chạy kiểm thử hoặc xem kết quả đã đo | [Kiểm thử](KIEM_THU.md) |
 | Xem độ trễ, tốc độ máy chấm và dữ liệu đo | [Hiệu năng](HIEU_NANG.md) |
-| Đưa nguồn lên GitHub hoặc clone về máy | [GitHub](GITHUB.md) |
 | Giải thích đã tối ưu gì và tác dụng của từng phần | [Tối ưu hệ thống](TOI_UU.md) |
 
 ## Người cài mới đi theo đường nào?

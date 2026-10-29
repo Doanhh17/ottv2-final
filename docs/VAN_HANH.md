@@ -254,15 +254,7 @@ Chỉ chia sẻ Sheet xếp hạng và tài liệu tải cho sinh viên. Giữ r
 
 Máy quản lý tự kiểm dọn log khoảng 60 giây/lần: chỉ log hoàn tất quá 7 ngày, có mã băm/biên nhận đúng mới được dọn. Điểm và tóm tắt trận giữ nguyên. Tệp lỗi/lạ để lại để kiểm tra; không cần đặt lịch xóa thủ công khi hệ thống đã chạy bình thường.
 
-Đưa mã nguồn hiện hành lên GitHub theo [GITHUB.md](GITHUB.md). README, tài liệu và số đo hiệu năng được đọc trực tiếp trong repository. Cập nhật manifest trước mỗi commit bằng:
-
-```powershell
-python scripts/export_github.py --refresh-manifest
-```
-
-**Cần thấy:** `manifest_updated`. Không đưa khóa, cơ sở dữ liệu hoặc output vào Git. Lệnh này dành cho cây mã đang phát triển, không chạy để hợp thức hóa các tệp đã sửa riêng trên máy chấm đang vận hành.
-
-Người nhận clone rồi kiểm trong Ubuntu bằng `sha256sum -c SHA256SUMS`. Mọi dòng cần `OK` trên cây nguồn chưa sửa. Khi cần chuyển một bản cập nhật cho máy chấm đã cài dịch vụ, công cụ `scripts/build_release.py` vẫn tạo được gói nguồn nội bộ theo giao thức cập nhật ở MAY_CHAM; đây là công cụ vận hành, không phải hình thức nộp dự án. Bản sao lưu data riêng ở mục 4 không được đưa vào repository.
+Lấy nguồn từ [repository dự án](https://github.com/Doanhh17/ottv2-final), kiểm trong Ubuntu bằng `sha256sum -c SHA256SUMS`. Mọi dòng cần `OK` trên cây nguồn chưa sửa. Khi cần chuyển một bản cập nhật cho máy chấm đã cài dịch vụ, công cụ `scripts/build_release.py` tạo gói nguồn nội bộ theo giao thức cập nhật ở [MAY_CHAM.md](MAY_CHAM.md). Khóa và bản sao lưu data riêng ở mục 4 được giữ ngoài repository.
 
 ## Phiên đăng nhập và cấu hình đấu thử
 

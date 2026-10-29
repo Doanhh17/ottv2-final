@@ -15,7 +15,7 @@ Ví dụ dưới dùng thông tin bản triển khai của nhóm:
 | Người dùng và IP SSH của VM trắng ví dụ | azureuser@IP_VPS_MOI |
 | Khóa SSH trên Windows | Downloads/ottv2-key.pem |
 | Tên miền | ottv2-nhom12.koreacentral.cloudapp.azure.com |
-| Repository nguồn | https://github.com/TEN_GITHUB/ottv2.git — thay bằng URL thật |
+| Repository nguồn | https://github.com/Doanhh17/ottv2-final.git |
 
 Nếu dựng VPS khác, thay các giá trị bằng thông tin máy đó. Giữ khóa SSH riêng; khóa này khác khóa máy chấm và mật khẩu website.
 
@@ -34,12 +34,12 @@ Tất cả khối bash còn lại chạy trong **cửa sổ SSH vào VPS**:
 ```bash
 sudo apt update
 sudo apt install -y python3 git nginx snapd ufw nano curl ca-certificates
-git clone https://github.com/TEN_GITHUB/ottv2.git ~/ottv2-source
+git clone https://github.com/Doanhh17/ottv2-final.git ~/ottv2-source
 cd ~/ottv2-source
 sha256sum -c SHA256SUMS
 ```
 
-Thay `TEN_GITHUB` theo [GITHUB.md](GITHUB.md). **Cần thấy:** mọi dòng `OK`. `~/ottv2-source` phải là thư mục mới; không chép đè website đang chạy.
+**Cần thấy:** mọi dòng `OK`. `~/ottv2-source` phải là thư mục mới; không chép đè website đang chạy.
 
 ```bash
 sudo adduser --system --group --home /var/lib/ottv2 --shell /usr/sbin/nologin ottv2

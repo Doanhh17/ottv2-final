@@ -17,6 +17,27 @@ Sinh viên viết bot trong một tệp `main.py`, đặt ở gốc repo GitHub 
 
 **Đọc trước:** [Hướng dẫn sinh viên](docs/QUY_DINH_SINH_VIEN.md) · [Luật và cách viết main.py](docs/VIET_BOT.md) · [Mục lục toàn bộ tài liệu](docs/README.md).
 
+### Góc nhìn người xây dựng và tổ chức giải
+
+Tôi xây dựng OTTv2 để tổ chức giải đấu bot cho sinh viên: người chơi có thể tự đăng ký, cập nhật bài, tìm đối thủ và xem kết quả; người quản lý có thể điều hành giải, đổi bản đồ, quản lý tài khoản và theo dõi máy chấm. Bài toán của tôi là vận hành được các công việc đó với ngân sách phù hợp, tận dụng máy tính sẵn có và giảm thao tác thủ công khi số người tham gia tăng.
+
+Tôi chia hệ thống theo tính chất công việc: VPS giữ dữ liệu và điều phối; các máy chấm xử lý bot; Google phục vụ biểu mẫu, bảng điểm và tài liệu; máy sinh viên xử lý đấu thử và replay. Cách chia này giúp dùng tài nguyên đúng chỗ, bổ sung sức chấm khi cần và kiểm soát chi phí thuê máy chủ.
+
+### Tôi tối ưu chi phí và vận hành như thế nào?
+
+| Lựa chọn của tôi | Lợi ích khi tổ chức giải | Đọc kỹ cơ chế |
+| --- | --- | --- |
+| Một VPS duy trì website và 4 chỗ chấm; bật thêm các PC sẵn có khi đông người | Có năng lực chấm thường trực, bổ sung công suất bằng thiết bị của nhóm | [Phân chia máy chấm](docs/TOI_UU.md#5-chia-việc-chấm-và-luôn-có-năng-lực-nền) · [Cài và bật máy](docs/MAY_CHAM.md) |
+| Kết nối Google Forms/Sheets bằng Apps Script; hướng dẫn và HTML tải trực tiếp từ Docs/Drive | Giảm phần biểu mẫu và nội dung mà VPS phải phục vụ cho từng sinh viên | [Phần việc đưa ra dịch vụ ngoài](docs/TOI_UU.md#1-chuyển-việc-đọc-và-xem-lại-ra-ngoài-vps) |
+| Đấu thử Python và xem replay trên máy sinh viên | Việc luyện bot và xem lại trận sử dụng tài nguyên của người xem, giảm việc chấm thử trên VPS | [Đấu thử](docs/DAU_THU.md) · [Cách giảm tải đọc/xem](docs/TOI_UU.md#1-chuyển-việc-đọc-và-xem-lại-ra-ngoài-vps) |
+| Kiểm trạng thái mỗi phút, dừng hỏi khi tab ẩn, chỉ cập nhật phần giao diện đổi và tải log khi cần | Giảm yêu cầu lặp, dữ liệu truyền và hiện tượng nháy giao diện | [Giảm số lần hỏi trạng thái](docs/TOI_UU.md#2-giảm-số-lần-hỏi-trạng-thái) |
+| Khi cập nhật bot, lấy commit mới nhất rồi chốt phiên bản; cache nội dung tải có giới hạn | Dùng đúng bài đã nhận, giảm tải lặp từ GitHub và kiểm soát RAM cache | [Tải bot và cache](docs/TOI_UU.md#4-tải-bot-github-theo-commit-và-dùng-cache-có-giới-hạn) |
+| Giới hạn tài nguyên bot, lưu kết quả chưa gửi và chống ghi Elo trùng | Kiểm soát việc chiếm tài nguyên, phục hồi khi mất mạng và giảm công xử lý sự cố | [Luật và tài nguyên](docs/VIET_BOT.md) · [Giữ kết quả](docs/TOI_UU.md#6-tránh-mất-kết-quả-và-tính-điểm-trùng) |
+
+Tôi kiểm các lựa chọn bằng số đo: API nội bộ hoàn thành 6.500/6.500 yêu cầu qua ba mức tải; ở mức 200 yêu cầu/giây, P95 là 3,361 ms. VPS chấm 8 trận bot mẫu sâu 3 với 4 trận song song trong 16,960 giây. Các mẫu này có điều kiện đo riêng, chưa chứng minh 4.000 sinh viên thi đấu đồng thời. **Số liệu, dữ liệu JSON và giới hạn phép đo:** [HIEU_NANG.md](docs/HIEU_NANG.md). **Toàn bộ tối ưu, cách thực hiện và đánh đổi:** [TOI_UU.md](docs/TOI_UU.md).
+
+Việc giảm chi phí đi cùng lựa chọn vận hành: trạng thái nền có thể hiển thị chậm gần một phút, Google có hạn mức riêng, PC bổ sung cần được bật và giữ kết nối. Tôi theo dõi hàng đợi, lỗi chấm và số đo thực tế để quyết định khi nào cần thêm tài nguyên. Kiến trúc chi tiết ở [THIET_KE.md](docs/THIET_KE.md); thao tác của người tổ chức ở [VAN_HANH.md](docs/VAN_HANH.md).
+
 ## 2. Những thông số cần biết
 
 | Nội dung | Quy định đang áp dụng | Đọc chi tiết |
@@ -46,7 +67,7 @@ Các chu kỳ trên là lịch kiểm khi dịch vụ hoạt động. Nhiều h�
 | Nginx, systemd, Ubuntu | HTTPS, giới hạn tốc độ, chạy website/máy chấm bằng dịch vụ |
 | **Google Apps Script** | **Web app trung gian nối VPS với Google Forms và Sheets**: đọc hồ sơ Forms, nhận xác nhận xử lý và ghi bảng xếp hạng |
 | Google Docs, Drive | Phục vụ hướng dẫn, mã mẫu và các HTML tải về qua liên kết trực tiếp |
-| GitHub | Lấy mã theo commit cố định; kiểm bài trước khi nhận phiên bản bot |
+| GitHub | Khi cập nhật, lấy commit mới nhất của nhánh mặc định rồi chốt phiên bản để tải, kiểm và thi đấu |
 
 Cụ thể, [ottv2/google_sync.py](ottv2/google_sync.py) trên VPS gọi [google/Code.gs](google/Code.gs), là Web app Apps Script chạy bằng tài khoản người tổ chức. Yêu cầu HTTPS có chữ ký HMAC để xác thực máy quản lý. Script đọc hai Forms khoảng 1 phút/lần; VPS kiểm và lưu tài khoản/thông tin mới rồi xác nhận để Script xóa câu trả lời đã xử lý, chỉ giữ biên nhận không có mật khẩu. Khoảng 2 phút/lần, VPS gửi bảng Elo chính thức cho Script ghi Sheets.
 
@@ -77,7 +98,6 @@ HTML đấu thử cần mạng để tải Python ban đầu; đo 7 giây **th�
 | Nối Google, tài khoản, sao lưu, xử lý sự cố | [VAN_HANH.md](docs/VAN_HANH.md) |
 | Kiểm thử và số đo chịu tải | [KIEM_THU.md](docs/KIEM_THU.md) |
 | Số đo hiệu năng và cách hiểu kết quả | [HIEU_NANG.md](docs/HIEU_NANG.md) |
-| Đưa mã nguồn lên GitHub | [GITHUB.md](docs/GITHUB.md) |
 
 VPS D2as_v4 2 vCPU/8 GiB chạy website và 4 luồng chấm thường trực. Các PC cấu hình local/Sinh/Hải/Dương lần lượt 6/12/6/12 luồng; chỉ nhận thêm việc khi bật và có kết nối. Số luồng không phải số trận hoàn tất mỗi giây. Cài PC một lần, những lần sau bấm nút Desktop theo MAY_CHAM; không dán lại lệnh cài mỗi ngày.
 
@@ -90,8 +110,8 @@ sudo -u ottv2 python3 -m ottv2.accounts --db /var/lib/ottv2/data/accounts.sqlite
 
 Nhập mật khẩu mới hai lần; không hiện ký tự lúc gõ là bình thường. Cần thấy `Đã lưu`, sau đó đăng nhập lại. Không ghi mật khẩu vào mã hoặc đối số lệnh.
 
-## 6. Mã nguồn trên GitHub
+## 6. Mã nguồn và tài liệu
 
 `ottv2/`: xử lý hệ thống · `web/`: website · `practice/`: HTML đấu thử · `replay/`: HTML xem lại · `google/`: Apps Script · `maps/`, `examples/`: bản đồ/bot mẫu · `deploy/`, `scripts/`: triển khai/vận hành · `tests/`: kiểm tự động · `docs/`: hướng dẫn.
 
-Repository chứa nguồn hiện hành, `SHA256SUMS` và tài liệu; dữ liệu tài khoản, khóa và output nằm ngoài Git. Làm theo [GITHUB.md](docs/GITHUB.md) để đẩy lần đầu, cập nhật và clone. Mã dựng HTML được giữ để tạo lại đúng tệp tải xuống. Số đo thực tế, phạm vi và công thức ước tính ở [HIEU_NANG.md](docs/HIEU_NANG.md); kết quả kiểm chức năng ở [KIEM_THU.md](docs/KIEM_THU.md).
+Repository của dự án: [Doanhh17/ottv2-final](https://github.com/Doanhh17/ottv2-final). Nguồn hiện hành đi kèm `SHA256SUMS` và tài liệu; dữ liệu tài khoản, khóa và output đặt riêng. Mã dựng HTML được giữ để tạo lại đúng tệp tải xuống. Số đo thực tế, phạm vi và công thức ước tính ở [HIEU_NANG.md](docs/HIEU_NANG.md); kết quả kiểm chức năng ở [KIEM_THU.md](docs/KIEM_THU.md).
