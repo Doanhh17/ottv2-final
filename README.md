@@ -4,10 +4,10 @@ Bài tập lớn môn **Lập Trình Mạng**, giảng viên **Hồ Đắc Phư�
 
 | STT | MSSV | Họ và tên | Vai trò |
 | :---: | --- | --- | --- |
-| 1 | | Lê Bá Tùng Dương | Thành viên |
+| 1 | 24020101 | Lê Bá Tùng Dương | Thành viên |
 | 2 | 24020071 | Nguyễn Đăng Doanh | Nhóm Trưởng |
-| 3 | | Nguyễn Đức Hải | Thành viên |
-| 4 | | Trương Gia Sinh | Thành viên |
+| 3 | 24020117 | Nguyễn Đức Hải | Thành viên |
+| 4 | 23020640 | Trương Gia Sinh | Thành viên |
 
 ## 1. Hệ thống làm gì?
 
